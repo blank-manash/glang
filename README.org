@@ -1,0 +1,24 @@
+#+TITLE: GLANG
+#+AUTHOR: Manash Baul
+
+* Introduction
+
+The above project is a in-progress compiler for =glang=. It leverages a custom build lexer and parser implementing the TOP-DOWN Recursive Descent Algorithm for semantic checking.
+
+* Syntax
+
+=glang= borrows a lot of it's syntax from =javascript=, along with it's support for functional programming
+
+An example code is provided below
+
+#+begin_src typescript
+  let x = 51 + 21;
+
+  const add = func(a, b) {
+    a + b // Semi-colons are optional and '//' triggers a comment
+  }
+
+  let add5 = func(x) {
+    return add(5,x); // Partial Application
+  }
+#+end_src
