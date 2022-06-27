@@ -1,6 +1,8 @@
 import {TOKEN, Token} from "../lexer/token";
 import {Lexer} from "../lexer/lexer";
 import {Statement} from "./statements/statement";
+import {LetStatement} from "./statements/letStatement";
+import {Expr} from "./exprs/expr";
 
 export class Parser {
     statements: Array<Statement>;
@@ -11,12 +13,14 @@ export class Parser {
 
     private constructor(_input: string) {
         this.statements = [];
-        this.statementType = [ ];
+        this.statementType = [
+            new LetStatement(),
+        ];
         this.lexer = Lexer.create(_input);
         this.curToken = this.lexer.nextToken();
         this.nextToken = this.lexer.nextToken();
     }
-    
+
     static create(_input: string) {
         return new Parser(_input);
     }
@@ -41,7 +45,6 @@ export class Parser {
         this.advanceTokens();
         return token;
     }
-
     readExpectedToken(expectedToken: TOKEN) {
         const token = this.peekToken();
         if (token.getToken() !== expectedToken)
@@ -49,4 +52,18 @@ export class Parser {
         this.advanceTokens();
         return token;
     }
+
+    parse() {
+        while(this.curToken.getToken() !== TOKEN.EOF) {
+            this.parseStatement();
+        }
+    }
+
+    parseStatement(): Statement {
+        return this.statementType.
+            filter(stmt => stmt.isApplicable(this.curToken)).
+            map(st => st.parse(this)).
+            at(0);
+    };
+    parseExpr(): Expr {};
 }

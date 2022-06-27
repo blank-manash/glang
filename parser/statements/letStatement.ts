@@ -35,7 +35,7 @@ export class LetStatement implements Statement {
         token = p.readExpectedToken(TOKEN.IDENT);
         const name = token.getLiteral();
         p.readExpectedToken(TOKEN.ASSIGN);
-        const value = Expr.parse(p);
+        const value = p.parseExpr();
         return LetStatement.create(name, value);
     }
 }
