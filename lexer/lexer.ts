@@ -101,6 +101,12 @@ export class Lexer {
 
             case "+": return Token.create(TOKEN.PLUS);
 
+            case "-": return Token.create(TOKEN.MINUS);
+
+            case "*": return Token.create(TOKEN.MUL);
+
+            case "/": return Token.create(TOKEN.DIV);
+
             case "!": return Token.create(TOKEN.BANG);
 
             case ",": return Token.create(TOKEN.COMMA);

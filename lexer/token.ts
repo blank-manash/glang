@@ -11,6 +11,9 @@ export enum TOKEN {
     LBRACE = "{",
     ASSIGN = "=",
     PLUS = "+",
+    MINUS = "-",
+    MUL = "*",
+    DIV = "/",
     EQUAL = "==",
     NEQUAL = "!=",
     BANG = "!",
@@ -60,7 +63,7 @@ export class Token {
      * @return {Array<Token} The array of Token objects
      */
     static list(...tokens: Array<TOKEN>): Array<Token> {
-        const ar = [];
+        const ar: Token[] = [];
         for (const token of tokens) {
             ar.push(Token.create(token));
         }
@@ -88,6 +91,9 @@ export const TokenFactory = {
     LBRACE: Token.create(TOKEN.LBRACE),
     ASSIGN: Token.create(TOKEN.ASSIGN),
     PLUS: Token.create(TOKEN.PLUS),
+    DIV: Token.create(TOKEN.DIV),
+    MUL: Token.create(TOKEN.MUL),
+    MINUS: Token.create(TOKEN.MINUS),
     EQUAL: Token.create(TOKEN.EQUAL),
     NEQUAL: Token.create(TOKEN.NEQUAL),
     BANG: Token.create(TOKEN.BANG),
