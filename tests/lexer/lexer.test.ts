@@ -5,7 +5,7 @@ describe("Simple Lexer Statements", () => {
     it("Parsing ASSIGN statements", () => {
         const input = "let x = 52 + 21;";
         const lex = Lexer.create(input);
-        const expected = [
+        const expected: Token[] = [
             Token.create(TOKEN.LET),
             new Token(TOKEN.IDENT, "x"),
             Token.create(TOKEN.ASSIGN),
@@ -14,7 +14,7 @@ describe("Simple Lexer Statements", () => {
             new Token(TOKEN.INT, "21"),
             Token.create(TOKEN.SEMICOLON)];
 
-        const actual = [];
+        const actual: Token[] = [];
         while (!lex.isEnd()) {
             actual.push(lex.nextToken());
         }
@@ -78,7 +78,7 @@ let c = func(a, b) {
         ];
 
         const lex = Lexer.create(input);
-        const actual = [];
+        const actual: Token[] = [];
         while (!lex.isEnd()) {
             actual.push(lex.nextToken());
         }

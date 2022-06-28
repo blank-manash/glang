@@ -1,9 +1,10 @@
 import {TOKEN, Token} from "../../lexer/token";
+import {Expr} from "../exprs/expr"; import {PRECEDENCE} from "../exprs/precedence";
 import {Parser} from "../parser";
 import {Statement} from "./statement";
 
-export class LetStatement implements Statement {
-    private _name: string;
+export class LetStatement extends Statement {
+    private _name: string = "";
     private _value: Expr;
 
     static create(__name: string, __value: Expr) {
@@ -14,7 +15,7 @@ export class LetStatement implements Statement {
     }
 
     public get value(): Expr {
-        return this._value;
+        return this._value!;
     }
     public set value(value: Expr) {
         this._value = value;
@@ -30,14 +31,17 @@ export class LetStatement implements Statement {
     isApplicable(token: Token): boolean {
         return token.getToken() === TOKEN.LET;
     }
+
     parse(p: Parser): Statement {
         let token = p.readExpectedToken(TOKEN.LET);
         token = p.readExpectedToken(TOKEN.IDENT);
         const name = token.getLiteral();
         p.readExpectedToken(TOKEN.ASSIGN);
-        const value = p.parseExpr();
+        const value = p.parseExpr(PRECEDENCE.LOWEST);
+        this.skipSemicolon(p);
         return LetStatement.create(name, value);
     }
+    toString(): string {
+       return `let ${this._name} = ${this._value.toString()}` 
+    }
 }
-
-

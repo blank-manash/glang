@@ -77,8 +77,10 @@ export class Token {
 
     getToken() {return this._token;}
     getLiteral() {return this._literal;};
+    toString(): string {
+        return this.getLiteral();
+    }
 }
-
 
 export const TokenFactory = {
     ILLEGAL: Token.create(TOKEN.ILLEGAL),
