@@ -76,5 +76,34 @@ describe("Expression Statements", () => {
             ];
             expect(actual).toStrictEqual(expected);
         });
+        describe("c. Complex Nested Expressions", () => {
+            const inpA = `5 + 7 - 21 / 4`
+            const inpB = `510 > 97 != 77 < 64`
+            const inpC = `a + b * c - d / f * e`
+            const inpD = `3 + 4; -5 * 4`
+            test(`* Input A: ${inpA}`, () => {
+                const actual = Parser.create(inpA).parse().getString();
+                const expected = "((5 + 7) - (21 / 4))";
+                expect(actual).toStrictEqual(expected);
+            });
+
+            test(`* Input B: ${inpB}`, () => {
+                const actual = Parser.create(inpB).parse().getString();
+                const expected = "((510 > 97) != (77 < 64))";
+                expect(actual).toStrictEqual(expected);
+            });
+
+            test(`* Input C: ${inpC}`, () => {
+                const actual = Parser.create(inpC).parse().getString();
+                const expected = "((a + (b * c)) - ((d / f) * e))"
+                expect(actual).toStrictEqual(expected);
+            });
+
+            test(`* Input D: ${inpD}`, () => {
+                const actual = Parser.create(inpD).parse().getString();
+                const expected = "(3 + 4)((-5) * 4)"
+                expect(actual).toStrictEqual(expected);
+            });
+        });
     });
 });
