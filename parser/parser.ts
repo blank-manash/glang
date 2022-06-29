@@ -13,6 +13,7 @@ import {Prefix} from "./exprs/prefix";
 import {BlockStatements} from "./statements/blockStatements";
 import {ExprStatement} from "./statements/exprStatement";
 import {LetStatement} from "./statements/letStatement";
+import {ReturnStatement} from "./statements/returnStatement";
 import {Statement} from "./statements/statement";
 
 
@@ -30,6 +31,7 @@ export class Parser {
             new LetStatement(),
             new ExprStatement(),
             new BlockStatements(),
+            new ReturnStatement()
         ];
         this.exprTypes = [
             new Identifier(),

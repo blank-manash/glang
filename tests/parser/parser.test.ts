@@ -168,6 +168,13 @@ describe("Expression Statements", () => {
             const expected = `add(2, (3 * 3), ((-5) + 6))`;
             expect(actual).toStrictEqual(expected);
         });
+
+        it("b. sub(5, 45, func(x, y) { add() }", () => {
+            const inp = `sub(5, 45, func(x, y) { return add() })`
+            const actual = Parser.create(inp).parse().getString();
+            const expected = `sub(5, 45, func(x, y) {return add()})`
+            expect(actual).toStrictEqual(expected);
+        });
     });
 
 });
