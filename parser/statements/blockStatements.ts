@@ -1,6 +1,7 @@
 import {TOKEN, Token} from "../../lexer/token";
-import {Parser} from "../parser";
-import {Statement} from "./statement";
+import {context} from "../context";
+import {evalStatements, Parser} from "../parser";
+import {Statement, STATEMENTS} from "./statement";
 
 export class BlockStatements extends Statement {
     private _statements: Statement[];
@@ -32,6 +33,13 @@ export class BlockStatements extends Statement {
         this.statements.forEach(s => str += s);
         return `{${str}}`;
     }
+    eval() {
+        context.pushCopy();
+        const ret = evalStatements(this.statements);
+        context.pop();
+        return ret;
+    }
     public get statements(): Statement[] { return this._statements; }
     public set statements(value: Statement[]) { this._statements = value; }
+    type(): STATEMENTS { return STATEMENTS.BLOCK; }
 }

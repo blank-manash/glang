@@ -19,10 +19,22 @@ function lexing(uinput: string): Array<Token> {
 }
 
 function parsing(uinput: string): string {
-    return Parser.create(uinput).parse().getString();
+    try {
+        return Parser.create(uinput).parse().getString();
+    } catch (err: any) {
+        return "Heya! You might have some syntax errors".concat(' ==> ', err.message);
+    }
 }
 
-const evalFun = parsing;
+function executor(uinput: string) {
+    try {
+        return Parser.create(uinput).parse().eval();
+    } catch (err: any) {
+        return "Heya! You might have some parsing errors".concat(' ==> ', err.message);
+    }
+}
+
+const evalFun = executor;
 
 function evaluator(uinput: string, context, filename, callback) {
     callback(null, evalFun(uinput));

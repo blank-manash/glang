@@ -38,6 +38,17 @@ export class IfExpr implements Expr {
         ex.then = then;
         return ex;
     }
+
+    eval() {
+        const con = this.condition.eval();
+        if (con) {
+            return this.then.eval();
+        }
+        if (this.elseExpr !== false) {
+            return this.elseExpr.eval();
+        }
+    }
+
     toString(): string {
         return `if ${this.condition.toString()} ${this.then.toString()} ${this.printOtherwise()}`
     }

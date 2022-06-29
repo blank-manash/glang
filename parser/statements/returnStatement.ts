@@ -2,7 +2,11 @@ import {TOKEN, Token} from "../../lexer/token";
 import {Expr} from "../exprs/expr";
 import {PRECEDENCE} from "../exprs/precedence";
 import {Parser} from "../parser";
-import {Statement} from "./statement";
+import {Statement, STATEMENTS} from "./statement";
+
+export class ReturnExpression {
+    value: any;
+}
 
 export class ReturnStatement extends Statement {
     returnExpr: Expr;
@@ -12,6 +16,9 @@ export class ReturnStatement extends Statement {
     parse(p: Parser): Statement {
         p.readExpectedToken(TOKEN.RETURN);
         const expr = p.parseExpr(PRECEDENCE.LOWEST);
+        if (p.curTokenIs(TOKEN.SEMICOLON)) {
+            p.readToken()
+        }
         return ReturnStatement.create(expr);
     }
     static create(expr: Expr): Statement {
@@ -20,7 +27,14 @@ export class ReturnStatement extends Statement {
         return ex;
     }
 
+    eval() {
+        const ret = new ReturnExpression();
+        ret.value = this.returnExpr.eval();
+        return ret;
+    }
+
     toString(): string {
         return `return ${this.returnExpr.toString()}`
     }
+    type(): STATEMENTS { return STATEMENTS.RETURN; }
 }

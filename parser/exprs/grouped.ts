@@ -1,3 +1,8 @@
+/**
+ * @file  : grouped.ts
+ * @author: Manash Baul <mximpaid@gmail.com>
+ * Date   : 29.06.2022
+ */
 import {TOKEN} from "../../lexer/token";
 import {Parser} from "../parser";
 import {Expr} from "./expr";
@@ -24,6 +29,9 @@ export class Grouped implements Expr {
     }
     toString(): string {
         return `(${this.expr.toString()})`
+    }
+    eval() {
+        return this.expr.eval();
     }
 
     public get expr(): Expr { return this._expr; }

@@ -1,7 +1,9 @@
 import {TOKEN, Token} from "../../lexer/token";
-import {Expr} from "../exprs/expr"; import {PRECEDENCE} from "../exprs/precedence";
+import {context} from "../context";
+import {Expr} from "../exprs/expr";import {Identifier} from "../exprs/identifier";
+ import {PRECEDENCE} from "../exprs/precedence";
 import {Parser} from "../parser";
-import {Statement} from "./statement";
+import {Statement, STATEMENTS} from "./statement";
 
 export class LetStatement extends Statement {
     private _name: string = "";
@@ -32,6 +34,12 @@ export class LetStatement extends Statement {
         return token.getToken() === TOKEN.LET;
     }
 
+    eval() {
+        const val = this.value.eval();
+        context.setVariable(this.name, val);
+        return '';
+    }
+
     parse(p: Parser): Statement {
         let token = p.readExpectedToken(TOKEN.LET);
         token = p.readExpectedToken(TOKEN.IDENT);
@@ -44,4 +52,5 @@ export class LetStatement extends Statement {
     toString(): string {
        return `let ${this._name} = ${this._value.toString()}; ` 
     }
+    type(): STATEMENTS { return STATEMENTS.LET; }
 }

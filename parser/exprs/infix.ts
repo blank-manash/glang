@@ -1,3 +1,8 @@
+/**
+ * @file  : infix.ts
+ * @author: Manash Baul <mximpaid@gmail.com>
+ * Date   : 29.06.2022
+ */
 import {TOKEN, Token} from "../../lexer/token";
 import {Parser} from "../parser";
 import {CallExpr} from "./callExpr";
@@ -5,7 +10,7 @@ import {Expr} from "./expr";
 import {getInfixPrec} from "./precedence";
 
 export class Infix implements Expr {
-
+    callExpr: Expr | undefined;
     isApplicable(token: TOKEN): boolean {
         const acceptedTokens = [
             TOKEN.PLUS,
@@ -34,7 +39,8 @@ export class Infix implements Expr {
     }
 
     parseCallExpr(p: Parser, func: Expr): Expr {
-        return new CallExpr().parse(p, func);
+        this.callExpr = new CallExpr().parse(p, func);
+        return this.callExpr;
     }
 
     private _left: Expr;
@@ -51,6 +57,20 @@ export class Infix implements Expr {
         infix.right = right;
         infix.token = token;
         return infix;
+    }
+    eval() {
+        const leftEval = this.left.eval();
+        const rightEval = this.right.eval();
+        switch (this.token.getToken()) {
+            case TOKEN.PLUS: return leftEval + rightEval;
+            case TOKEN.MINUS: return leftEval - rightEval;
+            case TOKEN.DIV: return leftEval / rightEval;
+            case TOKEN.MUL: return leftEval * rightEval;
+            case TOKEN.EQUAL: return leftEval === rightEval;
+            case TOKEN.NEQUAL:return leftEval !== rightEval;
+            case TOKEN.LT: return leftEval < rightEval;
+            case TOKEN.GT:return leftEval > rightEval;
+        }
     }
     public get left(): Expr { return this._left; }
     public set left(value: Expr) { this._left = value; }

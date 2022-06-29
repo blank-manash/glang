@@ -79,6 +79,12 @@ describe("Expression Statements", () => {
             ];
             expect(actual).toStrictEqual(expected);
         });
+        test("c. Nested Funcition Calls", () => {
+            const inp = `add(5, 6 * 10)`
+            const actual = Parser.create(inp).parse().getString();
+            const expected = `add(5, (6 * 10))`;
+            expect(actual).toStrictEqual(expected);
+        })
         describe("c. Complex Nested Expressions", () => {
             const inpA = `5 + 7 - 21 / 4`
             const inpB = `510 > 97 != 77 < 64`

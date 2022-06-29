@@ -4,12 +4,9 @@ import {Expr} from "./expr";
 
 export class Integer implements Expr {
     private _value: number;
-    public get value() {
-        return this._value!;
-    }
-    public set value(value) {
-        this._value = value;
-    }
+    public get value() { return this._value!; }
+    public set value(value) { this._value = value; }
+
     isApplicable(token: TOKEN): boolean {
         return token === TOKEN.INT;
     }
@@ -19,6 +16,9 @@ export class Integer implements Expr {
         return Integer.create(num);
     }
 
+    eval() {
+        return this.value;
+    }
     static create(val: number): Integer {
         const num = new Integer();
         num.value = val;

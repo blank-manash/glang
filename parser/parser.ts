@@ -8,14 +8,24 @@ import {Identifier} from "./exprs/identifier";
 import {IfExpr} from "./exprs/if";
 import {Infix} from "./exprs/infix";
 import {Integer} from "./exprs/integer";
+import {NullExpr} from "./exprs/nullExpr";
 import {getInfixPrec, PRECEDENCE} from "./exprs/precedence";
 import {Prefix} from "./exprs/prefix";
 import {BlockStatements} from "./statements/blockStatements";
 import {ExprStatement} from "./statements/exprStatement";
 import {LetStatement} from "./statements/letStatement";
-import {ReturnStatement} from "./statements/returnStatement";
+import {ReturnExpression, ReturnStatement} from "./statements/returnStatement";
 import {Statement} from "./statements/statement";
 
+export function evalStatements(statements: Statement[]) {
+    let last: any;
+    for(let i = 0; i < statements.length; ++i) {
+        last = statements.at(i)!.eval();
+        if (last instanceof ReturnExpression)
+            return last;
+    }
+    return last;
+};
 
 export class Parser {
     private _statements: Array<Statement>;
@@ -40,7 +50,8 @@ export class Parser {
             new BooleanExpr(),
             new Grouped(),
             new IfExpr(),
-            new FuncLiteral()
+            new FuncLiteral(),
+            new NullExpr(),
         ];
         this.lexer = Lexer.create(_input);
         this.curToken = this.lexer.nextToken();
@@ -101,7 +112,7 @@ export class Parser {
             .map(exp => exp.parse(this));
 
         if (leftExprArray.length === 0) {
-            throw new Error(`Unidentified Token ${this.curToken}`);
+            throw new Error(`Expected Expression: Unidentified Token ${this.curToken}`);
         }
 
         let res = leftExprArray.at(0)!;
@@ -130,6 +141,13 @@ export class Parser {
 
     curTokenIs(token: TOKEN) {
         return this.curToken.getToken() === token;
+    }
+
+    eval() {
+        const val = evalStatements(this.statements);
+        if (val instanceof ReturnExpression)
+            return val.value;
+        return val;
     }
 
     get statements(): Array<Statement> {

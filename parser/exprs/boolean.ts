@@ -1,3 +1,8 @@
+/**
+ * @file  : boolean.ts
+ * @author: Manash Baul <mximpaid@gmail.com>
+ * Date   : 29.06.2022
+ */
 import {TOKEN} from "../../lexer/token";
 import {Parser} from "../parser";
 import {Expr} from "./expr";
@@ -22,6 +27,9 @@ export class BooleanExpr implements Expr {
         return this.value ? "true" : "false";
     }
 
+    eval() { return this._value; }
+
     public get value(): boolean { return this._value; }
     public set value(value: boolean) { this._value = value; }
+
 }

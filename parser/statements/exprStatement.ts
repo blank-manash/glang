@@ -1,9 +1,13 @@
+/**
+ * @file  : exprStatement.ts
+ * @author: Manash Baul <mximpaid@gmail.com>
+ * Date   : 29.06.2022
+ */
 import {TOKEN, Token} from '../../lexer/token';
-import {Expr} from '../exprs/expr'
-import {Identifier} from '../exprs/identifier';
+import {Expr} from '../exprs/expr';
 import {PRECEDENCE} from '../exprs/precedence';
 import {Parser} from '../parser';
-import {Statement} from './statement';
+import {Statement, STATEMENTS} from './statement';
 
 export class ExprStatement extends Statement {
     private _expr: Expr;
@@ -23,6 +27,9 @@ export class ExprStatement extends Statement {
         return exprStmt;
     }
 
+    eval() {
+        return this.expr.eval();
+    }
     toString(): string {
         return `${this._expr.toString()}`
     }
@@ -33,4 +40,5 @@ export class ExprStatement extends Statement {
     set expr(value) {
         this._expr = value;
     }
+    type(): STATEMENTS { return STATEMENTS.EXPR; }
 }

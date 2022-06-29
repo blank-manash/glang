@@ -1,6 +1,14 @@
+/**
+ * @file  : callExpr.ts
+ * @author: Manash Baul <mximpaid@gmail.com>
+ * Date   : 29.06.2022
+ */
+
 import {TOKEN} from "../../lexer/token";
 import {Parser} from "../parser";
 import {Expr} from "./expr";
+import {FuncLiteral} from "./functionLiteral";
+import {Identifier} from "./identifier";
 import {PRECEDENCE} from "./precedence";
 
 export class CallExpr implements Expr {
@@ -38,6 +46,21 @@ export class CallExpr implements Expr {
         }
         p.readExpectedToken(TOKEN.RPAREN, "Error Reading Function Call, Cannot find ending )");
         return args;
+    }
+
+    eval() {
+        let fn: any = this.func;
+
+        if (this.func instanceof Identifier) {
+            fn = fn.eval();
+        }
+
+        if (!(fn instanceof FuncLiteral)) {
+            throw new Error(`Called Expression ${this.func.toString()} is not a function`);
+        }
+
+        const evalArgs = this.callArgs.map(ca => ca.eval());
+        return (fn as FuncLiteral).execute(evalArgs);
     }
 
     toString(): string {

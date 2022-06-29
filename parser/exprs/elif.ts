@@ -39,6 +39,16 @@ export class Elif implements Expr {
         return exp;
     }
 
+    eval() {
+        const con = this.condition.eval();
+        if (con) {
+            return this.then.eval();
+        }
+        if (this.otherwise !== false) {
+            return this.otherwise.eval();
+        }
+    }
+
     toString(): string {
         return `elif ${this.condition.toString()} ${this.then.toString()} ${this.printOtherwise()}`;
     }

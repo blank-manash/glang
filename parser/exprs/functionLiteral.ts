@@ -1,13 +1,37 @@
+/**
+ * @file  : functionLiteral.ts
+ * @author: Manash Baul <mximpaid@gmail.com>
+ * Date   : 29.06.2022
+ */
 import {TOKEN} from "../../lexer/token";
+import {context} from "../context";
 import {Parser} from "../parser";
 import {BlockStatements} from "../statements/blockStatements";
+import {ReturnExpression} from "../statements/returnStatement";
 import {Statement} from "../statements/statement";
 import {Expr} from "./expr";
 import {Identifier} from "./identifier";
 
 export class FuncLiteral implements Expr {
+    execute(evalArgs: any[]) {
+        if (evalArgs.length !== this.args.length) {
+            throw new Error("Incorrect number of functions arguments");
+        }
+        context.pushClean();
+        for(let i = 0; i < evalArgs.length; ++i) {
+            const name = this.args.at(i)!.toString();
+            const val = evalArgs.at(i)!;
+            context.setVariable(name, val);
+        }
+        let ret = this.body.eval();
+        if (ret instanceof ReturnExpression) {
+            ret = ret.value;
+        }
+        context.pop();
+        return ret;
+    }
     args: Expr[];
-    body: Statement;
+    body: Statement; // BlockStatements
     isApplicable(token: TOKEN): boolean {
         return token === TOKEN.FUNCTION;
     }
@@ -42,6 +66,11 @@ export class FuncLiteral implements Expr {
         ex.body = body;
         return ex;
     }
+
+    eval() {
+        return this;
+    }
+
     toString(): string {
         return `func(${this.args.join(", ")}) ${this.body.toString()}`;
     }

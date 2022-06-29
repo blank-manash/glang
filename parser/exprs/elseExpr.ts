@@ -1,3 +1,8 @@
+/**
+ * @file  : elseExpr.ts
+ * @author: Manash Baul <mximpaid@gmail.com>
+ * Date   : 29.06.2022
+ */
 import {TOKEN} from "../../lexer/token";
 import {Parser} from "../parser";
 import {BlockStatements} from "../statements/blockStatements";
@@ -19,6 +24,10 @@ export class ElseExpr implements Expr {
         const ex = new ElseExpr();
         ex.then = then;
         return ex;
+    }
+
+    eval() {
+        return this.then.eval();
     }
 
     toString(): string {

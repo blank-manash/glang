@@ -28,6 +28,19 @@ export class Prefix implements Expr {
         return `(${this._token.getLiteral()}${this._expr})`;
     }
 
+    eval() {
+        if (this.token.getToken() === TOKEN.BANG) {
+            return !this.expr.eval();
+        }
+        if (this.token.getToken() === TOKEN.MINUS) {
+            const exp = this.expr.eval();
+            if (Number.isInteger(exp)) {
+                return -exp;
+            }
+            throw new Error(`${this.expr.toString()} does not evaluate to an integer`);
+        }
+    }
+
     set token(token: Token) { this._token = token; };
     get token() { return this._token };
     get expr() { return this._expr };

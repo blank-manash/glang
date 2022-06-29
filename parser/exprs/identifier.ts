@@ -1,10 +1,15 @@
+/**
+ * @file  : identifier.ts
+ * @author: Manash Baul <mximpaid@gmail.com>
+ * Date   : 29.06.2022
+ */
 import {TOKEN, Token} from "../../lexer/token";
+import {context} from "../context";
 import {Parser} from "../parser";
 import {Expr} from "./expr";
 
 export class Identifier implements Expr {
-    private _token: Token;
-
+    name: string;
     isApplicable(token: TOKEN): boolean {
         return token === TOKEN.IDENT;
     }
@@ -14,20 +19,17 @@ export class Identifier implements Expr {
         return Identifier.create(token);
     }
 
-    static create(_token: Token) {
+    static create(_token: Token,) {
         const iden = new Identifier();
-        iden.token = _token;
+        iden.name = _token.getLiteral();
         return iden;
     }
 
-    set token(__token: Token) {
-        this._token = __token;
-    }
-    get value() {
-        return this._token!.getLiteral();
+    eval() {
+        return context.getVariable(this.name);
     }
 
     toString(): string {
-        return `${this._token.getLiteral()}`;
+        return `${this.name}`;
     }
 }
