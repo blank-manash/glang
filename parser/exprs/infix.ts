@@ -1,16 +1,40 @@
-import {Token} from "../../lexer/token";
+import {TOKEN, Token} from "../../lexer/token";
 import {Parser} from "../parser";
+import {CallExpr} from "./callExpr";
 import {Expr} from "./expr";
-import {PRECEDENCE} from "./precedence";
+import {getInfixPrec} from "./precedence";
 
 export class Infix implements Expr {
 
-    isApplicable(): boolean {
-        return false;
+    isApplicable(token: TOKEN): boolean {
+        const acceptedTokens = [
+            TOKEN.PLUS,
+            TOKEN.MINUS,
+            TOKEN.DIV,
+            TOKEN.MUL,
+            TOKEN.EQUAL,
+            TOKEN.NEQUAL,
+            TOKEN.LT,
+            TOKEN.GT,
+            TOKEN.LPAREN
+        ];
+        return acceptedTokens.includes(token);
     }
 
-    parse(p: Parser): Expr {
-        return p.parseExpr(PRECEDENCE.LOWEST);
+    parse(p: Parser, left: Expr): Expr {
+        const token = p.peekToken();
+        if (p.curTokenIs(TOKEN.LPAREN)) {
+            p.readToken();
+            return this.parseCallExpr(p, left);
+        }
+        const curPrec = getInfixPrec(token.getToken());
+        p.readToken();
+        const right = p.parseExpr(curPrec);
+        return Infix.create(left, token, right);
+    }
+
+    parseCallExpr(p: Parser, func: Expr): Expr {
+        return new CallExpr().parse(p, func);
     }
 
     private _left: Expr;

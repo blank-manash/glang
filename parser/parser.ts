@@ -104,20 +104,14 @@ export class Parser {
 
         let res = leftExprArray.at(0)!;
         while (this.isInfix(order)) {
-            const token = this.curToken;
-            const curPrec = getInfixPrec(token.getToken());
-            const left = res;
-            this.advanceTokens();
-            const right = this.parseExpr(curPrec);
-            res = Infix.create(left, token, right);
-
+            res = new Infix().parse(this, res);
         }
         return res;
     }
     isInfix(prece: PRECEDENCE) {
         const token: TOKEN = this.peekToken().getToken();
-        return token !== TOKEN.SEMICOLON &&
-            getInfixPrec(token) > prece;
+        const infixObject = new Infix();
+        return infixObject.isApplicable(token) && getInfixPrec(token) > prece;
     }
 
     getString(): string {

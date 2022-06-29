@@ -161,4 +161,13 @@ describe("Expression Statements", () => {
         });
     });
 
+    describe("7. Call Expressions", () => {
+        it("a. add(2, 3 * 3, -5 + 6)", () => {
+            const inp = `add(2, 3 * 3, -5 + 6)`;
+            const actual = Parser.create(inp).parse().getString();
+            const expected = `add(2, (3 * 3), ((-5) + 6))`;
+            expect(actual).toStrictEqual(expected);
+        });
+    });
+
 });

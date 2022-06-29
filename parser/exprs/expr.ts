@@ -3,6 +3,6 @@ import {Parser} from "../parser";
 
 export interface Expr {
     isApplicable(token: TOKEN): boolean;
-    parse(p: Parser): Expr;
+    parse(p: Parser, left?: Expr): Expr;
     toString(): string;
 }
