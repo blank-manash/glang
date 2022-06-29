@@ -1,14 +1,19 @@
-import {TOKEN, Token} from "../lexer/token";
 import {Lexer} from "../lexer/lexer";
-import {Statement} from "./statements/statement";
-import {LetStatement} from "./statements/letStatement";
+import {TOKEN, Token} from "../lexer/token";
+import {BooleanExpr} from "./exprs/boolean";
 import {Expr} from "./exprs/expr";
-import {getInfixPrec, PRECEDENCE} from "./exprs/precedence";
+import {FuncLiteral} from "./exprs/functionLiteral";
+import {Grouped} from "./exprs/grouped";
 import {Identifier} from "./exprs/identifier";
-import {ExprStatement} from "./statements/exprStatement";
-import {Integer} from "./exprs/integer";
-import {Prefix} from "./exprs/prefix";
+import {IfExpr} from "./exprs/if";
 import {Infix} from "./exprs/infix";
+import {Integer} from "./exprs/integer";
+import {getInfixPrec, PRECEDENCE} from "./exprs/precedence";
+import {Prefix} from "./exprs/prefix";
+import {BlockStatements} from "./statements/blockStatements";
+import {ExprStatement} from "./statements/exprStatement";
+import {LetStatement} from "./statements/letStatement";
+import {Statement} from "./statements/statement";
 
 
 export class Parser {
@@ -24,11 +29,16 @@ export class Parser {
         this.statementType = [
             new LetStatement(),
             new ExprStatement(),
+            new BlockStatements(),
         ];
         this.exprTypes = [
             new Identifier(),
             new Integer(),
-            new Prefix()
+            new Prefix(),
+            new BooleanExpr(),
+            new Grouped(),
+            new IfExpr(),
+            new FuncLiteral()
         ];
         this.lexer = Lexer.create(_input);
         this.curToken = this.lexer.nextToken();
@@ -56,10 +66,15 @@ export class Parser {
         this.advanceTokens();
         return token;
     }
-    readExpectedToken(expectedToken: TOKEN) {
+    readExpectedToken(expectedToken: TOKEN, msg?: string) {
         const token = this.peekToken();
-        if (token.getToken() !== expectedToken)
-            throw Error(`Incorrect Token Type: Expected: ${token}\nButReceived ${this.nextToken}`);
+        if (token.getToken() !== expectedToken) {
+            if (msg) {
+                throw new Error(msg);
+            } else {
+                throw Error(`Incorrect Token Type: Expected: ${token}\nButReceived ${this.nextToken}`);
+            }
+        }
         this.advanceTokens();
         return token;
     }
@@ -100,7 +115,7 @@ export class Parser {
         return res;
     }
     isInfix(prece: PRECEDENCE) {
-        const token:TOKEN = this.peekToken().getToken();
+        const token: TOKEN = this.peekToken().getToken();
         return token !== TOKEN.SEMICOLON &&
             getInfixPrec(token) > prece;
     }
@@ -111,6 +126,14 @@ export class Parser {
             astString += this.statements.at(i)!.toString();
         }
         return astString;
+    }
+
+    nextTokenIs(token: TOKEN) {
+        return this.nextToken.getToken() === token;
+    }
+
+    curTokenIs(token: TOKEN) {
+        return this.curToken.getToken() === token;
     }
 
     get statements(): Array<Statement> {

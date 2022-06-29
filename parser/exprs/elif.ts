@@ -40,6 +40,12 @@ export class Elif implements Expr {
     }
 
     toString(): string {
-        return `elif ${this.condition.toString()} ${this.then.toString()} ${this.otherwise.toString()}`;
+        return `elif ${this.condition.toString()} ${this.then.toString()} ${this.printOtherwise()}`;
+    }
+
+    printOtherwise() {
+        if (this.otherwise !== false)
+            return this.otherwise.toString();
+        return '';
     }
 }

@@ -1,4 +1,5 @@
 import {TokenFactory} from "../../lexer/token";
+import {BooleanExpr} from "../../parser/exprs/boolean";
 import {Identifier} from "../../parser/exprs/identifier";
 import {Infix} from "../../parser/exprs/infix";
 import {Integer} from "../../parser/exprs/integer";
@@ -12,14 +13,16 @@ describe("Integar variable let statements", () => {
     test("1.Simple Let", () => {
         const inp = `let x = 5;
         let y = 23;
-        let billion = 1000000;`
+        let billion = 1000000;
+        let gazi = false`
         const parser = Parser.create(inp);
         parser.parse();
         const actual: Array<Statement> = parser.statements;
         const expected = [
             LetStatement.create("x", Integer.create(5)),
             LetStatement.create("y", Integer.create(23)),
-            LetStatement.create("billion", Integer.create(1000000))
+            LetStatement.create("billion", Integer.create(1000000)),
+            LetStatement.create("gazi", BooleanExpr.create(false))
         ];
         expect(actual).toStrictEqual(expected);
     });
@@ -56,7 +59,7 @@ describe("Expression Statements", () => {
         expect(actual).toStrictEqual(expected);
     });
 
-    describe("3. Infix Expressions", () => {
+    describe("4. Infix Expressions", () => {
         test("a. Addition and Multiplication", () => {
             const inp = `5+10; 5-2`
             const actual = Parser.create(inp).parse().statements;
@@ -81,6 +84,7 @@ describe("Expression Statements", () => {
             const inpB = `510 > 97 != 77 < 64`
             const inpC = `a + b * c - d / f * e`
             const inpD = `3 + 4; -5 * 4`
+            const inpE = `3 + 4 * 5 == 3 * 1 + 4 * 5`
             test(`* Input A: ${inpA}`, () => {
                 const actual = Parser.create(inpA).parse().getString();
                 const expected = "((5 + 7) - (21 / 4))";
@@ -104,6 +108,57 @@ describe("Expression Statements", () => {
                 const expected = "(3 + 4)((-5) * 4)"
                 expect(actual).toStrictEqual(expected);
             });
+
+            test(`* Input E: ${inpE}`, () => {
+                const actual = Parser.create(inpE).parse().getString();
+                const expected = "((3 + (4 * 5)) == ((3 * 1) + (4 * 5)))"
+                expect(actual).toStrictEqual(expected);
+            });
+        });
+
+        test("d. Grouped Expressions", () => {
+            const inp = `5 + 9 - d / (f * 3)`;
+            const actual = Parser.create(inp).parse().getString();
+            const expected = `((5 + 9) - (d / ((f * 3))))`;
+            expect(actual).toStrictEqual(expected);
+        })
+    });
+
+    test("3. Boolean Expression", () => {
+        const inp = `5 < 4 == false`;
+        const actual = Parser.create(inp).parse().getString();
+        const expected = `((5 < 4) == false)`;
+        expect(actual).toStrictEqual(expected);
+    });
+
+    describe("5. If Else Expressions", () => {
+        test("a. if (true) {x} else if (false) {z} else {z};", () => {
+            const inp = `if (true) {x} elif (false) {z} else {z};`;
+            const actual = Parser.create(inp).parse().getString();
+            const expected = `if (true) {x} elif (false) {z} else {z}`
+            expect(actual).toStrictEqual(expected);
+        });
+        test("b. if (5 < 10 == 91) { let z = 5; let b = c; } elif (21 - 56 == 20) { let excuse = false } else { let nothing = 1;}", () => {
+            const inp = `if (5 < 10 == 91) { let z = 5; let b = c; } elif (21 - 56 == 20) { let excuse = false } else { let nothing = 1;}`
+            const actual = Parser.create(inp).parse().getString();
+            const expected = `if (((5 < 10) == 91)) {let z = 5; let b = c; } elif (((21 - 56) == 20)) {let excuse = false; } else {let nothing = 1; }`
+            expect(actual).toStrictEqual(expected);
         });
     });
+
+    describe("6. Function Literal", () => {
+        test("a. func(a, b) { a + b };", () => {
+            const inp = `func(a, b) { a + b }`
+            const acutal = Parser.create(inp).parse().getString();
+            const expected = `func(a, b) {(a + b)}`;
+            expect(acutal).toStrictEqual(expected);
+        });
+        test("b. func() { 5 }", () => {
+            const inp = `func() { 5 }`;
+            const acutal = Parser.create(inp).parse().getString();
+            const expected = `func() {5}`;
+            expect(acutal).toStrictEqual(expected);
+        });
+    });
+
 });

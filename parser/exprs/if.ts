@@ -39,9 +39,14 @@ export class IfExpr implements Expr {
         return ex;
     }
     toString(): string {
-        return `if ${this.condition.toString()} ${this.then.toString()} ${this.elseExpr.toString()}`
+        return `if ${this.condition.toString()} ${this.then.toString()} ${this.printOtherwise()}`
     }
 
+    printOtherwise() {
+        if (this.elseExpr !== false)
+            return this.elseExpr.toString();
+        return '';
+    }
     public get condition(): Expr { return this._condition; }
     public set condition(value: Expr) { this._condition = value; }
     public get then(): Statement { return this._then; }

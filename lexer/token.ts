@@ -24,6 +24,7 @@ export enum TOKEN {
     TRUE = "true",
     FALSE = "false",
     IF = "if",
+    ELSE_IF = "elif",
     ELSE = "else",
     RETURN = "return"
 }
@@ -33,6 +34,7 @@ const keywords: Map<string, TOKEN> = new Map<string, TOKEN>();
 keywords.set("return", TOKEN.RETURN);
 keywords.set("else", TOKEN.ELSE);
 keywords.set("if", TOKEN.IF);
+keywords.set("elif", TOKEN.ELSE_IF);
 keywords.set("false", TOKEN.FALSE);
 keywords.set("true", TOKEN.TRUE);
 keywords.set("let", TOKEN.LET);
@@ -107,6 +109,7 @@ export const TokenFactory = {
     FALSE: Token.create(TOKEN.FALSE),
     IF: Token.create(TOKEN.IF),
     ELSE: Token.create(TOKEN.ELSE),
+    ELSE_IF: Token.create(TOKEN.ELSE_IF),
     RETURN: Token.create(TOKEN.RETURN),
 
     IDENT: (literal: string) => new Token(TOKEN.IDENT, literal),

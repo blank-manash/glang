@@ -21,6 +21,7 @@ infixPreMap.set(TOKEN.PLUS, PRECEDENCE.SUM);
 infixPreMap.set(TOKEN.MINUS, PRECEDENCE.SUM);
 infixPreMap.set(TOKEN.MUL, PRECEDENCE.PRODUCT);
 infixPreMap.set(TOKEN.DIV, PRECEDENCE.PRODUCT);
+infixPreMap.set(TOKEN.LPAREN, PRECEDENCE.CALL);
 
 export function getInfixPrec(token: TOKEN) {
     if (!infixPreMap.has(token)) {

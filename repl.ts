@@ -1,6 +1,7 @@
 import repl from 'repl'
 import {Lexer} from './lexer/lexer';
 import {Token} from './lexer/token';
+import {Parser} from './parser/parser';
 
 function startRepl(replOptions: object) {
     console.log("Welcome to Glang! This is for Gamakshi!");
@@ -17,8 +18,14 @@ function lexing(uinput: string): Array<Token> {
     return arr;
 }
 
-function evaluator(uinput, context, filename, callback) {
-    callback(null, lexing(uinput));
+function parsing(uinput: string): string {
+    return Parser.create(uinput).parse().getString();
+}
+
+const evalFun = parsing;
+
+function evaluator(uinput: string, context, filename, callback) {
+    callback(null, evalFun(uinput));
 }
 ;
 const replOptions = {

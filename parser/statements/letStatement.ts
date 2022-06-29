@@ -42,6 +42,6 @@ export class LetStatement extends Statement {
         return LetStatement.create(name, value);
     }
     toString(): string {
-       return `let ${this._name} = ${this._value.toString()}` 
+       return `let ${this._name} = ${this._value.toString()}; ` 
     }
 }
