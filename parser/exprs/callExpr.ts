@@ -14,7 +14,6 @@ import {PRECEDENCE} from "./precedence";
 export class CallExpr implements Expr {
     func: Expr; // Identifier or FunctionLiteral
     callArgs: Expr[];
-
     isApplicable(): boolean {
         return false;
     }
@@ -44,7 +43,7 @@ export class CallExpr implements Expr {
             arg = p.parseExpr(PRECEDENCE.LOWEST);
             args.push(arg);
         }
-        p.readExpectedToken(TOKEN.RPAREN, "Error Reading Function Call, Cannot find ending )");
+        p.readExpectedToken(TOKEN.RPAREN, "Syntax Error: Reading Function Call, Cannot find ending )");
         return args;
     }
 
@@ -56,7 +55,7 @@ export class CallExpr implements Expr {
         }
 
         if (!(fn instanceof FuncLiteral)) {
-            throw new Error(`Called Expression ${this.func.toString()} is not a function`);
+            throw new Error(`Runtime Error: Called Expression ${this.func.toString()} is not a function`);
         }
 
         const evalArgs = this.callArgs.map(ca => ca.eval());

@@ -13,25 +13,10 @@ import {Expr} from "./expr";
 import {Identifier} from "./identifier";
 
 export class FuncLiteral implements Expr {
-    execute(evalArgs: any[]) {
-        if (evalArgs.length !== this.args.length) {
-            throw new Error("Incorrect number of functions arguments");
-        }
-        context.pushClean();
-        for(let i = 0; i < evalArgs.length; ++i) {
-            const name = this.args.at(i)!.toString();
-            const val = evalArgs.at(i)!;
-            context.setVariable(name, val);
-        }
-        let ret = this.body.eval();
-        if (ret instanceof ReturnExpression) {
-            ret = ret.value;
-        }
-        context.pop();
-        return ret;
-    }
+
     args: Expr[];
     body: Statement; // BlockStatements
+    env: Map<string, any> = new Map<string, any>(); 
     isApplicable(token: TOKEN): boolean {
         return token === TOKEN.FUNCTION;
     }
@@ -60,6 +45,24 @@ export class FuncLiteral implements Expr {
         return args;
     }
 
+    execute(evalArgs: any[]) {
+        if (evalArgs.length !== this.args.length) {
+            throw new Error("Runtime Error: Incorrect number of functions arguments");
+        }
+        context.pushContext(this.env);
+        for (let i = 0; i < evalArgs.length; ++i) {
+            const name = this.args.at(i)!.toString();
+            const val = evalArgs.at(i)!;
+            context.setForce(name, val);
+        }
+        let ret = this.body.eval();
+        if (ret instanceof ReturnExpression) {
+            ret = ret.value;
+        }
+        context.pop();
+        return ret;
+    }
+
     static create(args: Expr[], body: Statement): Expr {
         const ex = new FuncLiteral();
         ex.args = args;
@@ -68,6 +71,7 @@ export class FuncLiteral implements Expr {
     }
 
     eval() {
+        this.env = new Map<string, any>(context.getTop());
         return this;
     }
 

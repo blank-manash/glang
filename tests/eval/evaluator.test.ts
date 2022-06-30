@@ -8,6 +8,9 @@ const testInput = (inp: string, expected: any) => {
 };
 
 describe("Evaluation Queries", () => {
+    beforeEach(() => {
+        context.clear();
+    });
     describe("1. If Conditions", () => {
         it("a. Simple If", () => {
             const inp = `if (true) { 5 } else { 10 }`;
@@ -22,18 +25,15 @@ describe("Evaluation Queries", () => {
     });
 
     describe("2. Variable Binding", () => {
-        beforeEach(() => {
-           context.clear(); 
-        });
         it("a. Create a variable", () => {
             const inp = `let x = 5; return x`
             const exp = 5;
             testInput(inp, exp);
-        }); 
+        });
 
         it("b. Not create duplicate variable", () => {
             const inp = `let x = 5; let x = 23`
-            expect(() =>  Parser.create(inp).parse().eval()).toThrowError();
+            expect(() => Parser.create(inp).parse().eval()).toThrowError();
         });
 
         it("c. Have Scoped Expressions", () => {
@@ -48,6 +48,7 @@ describe("Evaluation Queries", () => {
     });
 
     describe("3. Function Calls", () => {
+
         it("a. Use Functions", () => {
             const inp = `let add = func(a, b) { return a + b }; add(5, 6 * 10)`;
             const exp = 65;
@@ -67,6 +68,24 @@ describe("Evaluation Queries", () => {
             const exp = 45;
             testInput(inp, exp);
         });
+        it("c. Passing around", () => {
+            const inp = `
+                let recTwice = func(fn, arg) { fn(fn(arg)) };
+                let fn = func(x) { x + 2 };
+                recTwice(fn, 10);
+                `
+            const exp = 14;
+            testInput(inp, exp);
+        });
+        it ("d. Partial Type Functions", () => {
+            const inp = `
+            let add = func(x) { func(n) { x + n }; };
+            let addTwo = add(2);
+            addTwo(3)
+            `
+            const exp = 5;
+            testInput(inp, exp);
+        })
     });
 });
 

@@ -40,21 +40,23 @@ class Stack<T> {
 }
 
 class ExecutionContext {
+
     stack: Stack<Map<string, any>>;
-    pushClean() {
-        this.stack.push(new Map<string, any>());
-    }
-    private getTop() {
-        return this.stack.peek()!;
-    }
-    pushCopy() {
-        this.stack.push(new Map<string, any>(this.getTop()));
-    }
+    pushClean() { this.stack.push(new Map<string, any>()); }
+    pushContext(env: Map<string, any>) { this.stack.push(env); }
+    getTop() { return this.stack.peek()!; }
+    pushCopy() { this.stack.push(new Map<string, any>(this.getTop())); }
+
     setVariable(name: string, val: any) {
+
         const mp = this.getTop();
         if (mp.has(name)) {
             throw new Error(`Variable ${name} is already declared`);
         }
+        mp.set(name, val);
+    }
+    setForce(name: string, val: any) {
+        const mp = this.getTop();
         mp.set(name, val);
     }
     getVariable(name: string) {
@@ -69,7 +71,7 @@ class ExecutionContext {
         this.pushClean()
     }
     clear() {
-        while(!this.stack.empty()) {
+        while (!this.stack.empty()) {
             this.stack.pop();
         }
         this.pushClean();
