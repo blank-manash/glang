@@ -1,17 +1,16 @@
 import {TOKEN} from "../../lexer/token";
 import {Parser} from "../parser";
 import {Expr} from "./expr";
-import {Identifier} from "./identifier";
 import {PRECEDENCE} from "./precedence";
 
 
 export class Hash implements Expr {
-    map: Map<string, Expr>;
+    map: Map<Expr, Expr>;
     isApplicable(token: TOKEN): boolean {
         return token === TOKEN.LBRACE;
     }
     parse(p: Parser): Expr {
-        const mp = new Map<string, Expr>();
+        const mp = new Map<Expr, Expr>();
         p.readExpectedToken(TOKEN.LBRACE);
         if (p.nextTokenIs(TOKEN.RBRACE)) {
             return Hash.empty();
@@ -25,9 +24,9 @@ export class Hash implements Expr {
         return Hash.create(mp);
     }
 
-    parseEntry(p: Parser, mp: Map<string, Expr>): void {
-        const name = new Identifier().parse(p).toString();
-        p.readExpectedToken(TOKEN.ASSIGN);
+    parseEntry(p: Parser, mp: Map<Expr, Expr>): void {
+        const name = p.parseExpr(PRECEDENCE.LOWEST);
+        p.readExpectedToken(TOKEN.COLON);
         const val = p.parseExpr(PRECEDENCE.LOWEST);
         if (mp.has(name)) {
             throw Error(`${name} is already declared in the object`);
@@ -35,14 +34,14 @@ export class Hash implements Expr {
         mp.set(name, val);
     }
 
-    static create(mp: Map<string, Expr>) {
+    static create(mp: Map<Expr, Expr>) {
         const h = new Hash();
         h.map = mp;
         return h;
     }
 
     static empty(): Expr {
-        const mp = new Map<string, Expr>();
+        const mp = new Map<Expr, Expr>();
         const h = new Hash();
         h.map = mp;
         return h;
@@ -62,9 +61,9 @@ export class Hash implements Expr {
     }
 
     eval() {
-        const mp: Map<string, any> = new Map<string, any>();
+        const mp: Map<any, any> = new Map<any, any>();
         for(const [k, v] of this.map.entries()) {
-            mp.set(k, v.eval());
+            mp.set(k.eval(), v.eval());
         }
         return mp;
     }

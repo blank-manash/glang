@@ -19,12 +19,12 @@ function argParsers(start: TOKEN, parsingFn : Function, end: TOKEN) {
             return args;
         }
 
-        while (p.nextTokenIs(TOKEN.COMMA)) {
+        args.push(parsingFn(p));
+        while (p.curTokenIs(TOKEN.COMMA)) {
+            p.readToken();
             const iden = parsingFn(p)
             args.push(iden);
-            p.readToken();
         }
-        args.push(parsingFn(p));
         p.readExpectedToken(end, `Incorrect Function Expression, Missing ${end} for ${start}`);
         return args;
     }

@@ -16,9 +16,9 @@ export class IndexExpr implements Expr {
         return IndexExpr.create(left, right);
     }
 
-    static create(left: Expr, right: any): Expr {
+    static create(left: Expr, right: Expr): Expr {
         const ex = new IndexExpr();
-        ex.left =left;
+        ex.left = left;
         ex.right = right;
         return ex;
     }
@@ -29,9 +29,23 @@ export class IndexExpr implements Expr {
     eval() {
         const left = this.left.eval();
         const right = this.right.eval();
-        if (!Array.isArray(left)) {
-            throw new Error(`${this.left.toString()} is not an array`);
+        if (Array.isArray(left)) {
+            return this.evalArrayIndex(right, left);
         }
+        if (left instanceof Map) {
+            return this.evalHashIndex(left, right);
+        }
+        throw new Error(this.left.toString() + ' is not an element to be indexed');
+    }
+
+    evalHashIndex(left: Map<any, any>, right: any) {
+        if (!left.has(right)) {
+            return null;
+        }
+        return left.get(right)!;
+    }
+
+    private evalArrayIndex(right: any, left: any[]) {
         if (!Number.isInteger(right)) {
             throw new Error(`${this.right.toString()} doesn't evaluate to an integer for an index`);
         }

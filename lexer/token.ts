@@ -31,6 +31,7 @@ export enum TOKEN {
     ELSE = "else",
     RETURN = "return",
     NULL = "NULL",
+    COLON = ":"
 }
 
 const keywords: Map<string, TOKEN> = new Map<string, TOKEN>();
@@ -109,6 +110,7 @@ export const TokenFactory = {
     BANG: Token.create(TOKEN.BANG),
     COMMA: Token.create(TOKEN.COMMA),
     SEMICOLON: Token.create(TOKEN.SEMICOLON),
+    COLON: Token.create(TOKEN.COLON),
     FUNCTION: Token.create(TOKEN.FUNCTION),
     LET: Token.create(TOKEN.LET),
     TRUE: Token.create(TOKEN.TRUE),

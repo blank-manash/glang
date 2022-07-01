@@ -177,5 +177,28 @@ describe("Evaluation Queries", () => {
             testInput(inp, exp);
         });
     });
+
+    describe('7. Objects', () => {
+        test('1. Evaluation', () => {
+            const inp = `let name = 'hi'; let obj = { name : 'Yo' }; obj['hi'];`
+            const exp = 'Yo';
+            testInput(inp, exp);
+        });
+        test('2. Complex Evaluation', () => {
+            const inp =  `let two = "two";
+                let o = {
+                    "one": 10 - 9,
+                    two: 1 + 1,
+                    "thr" + "ee": 6 / 2,
+                    4: 4,
+                    true: 5,
+                    false: 6
+                }
+                return [o['one'], o[two], o['three'], o[4], o[true], o[false]];
+                `
+            const exp = [1, 2, 3, 4, 5, 6];
+            testInput(inp, exp);
+        });
+    });
 });
 

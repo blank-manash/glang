@@ -130,6 +130,8 @@ export class Lexer {
             case '[': return Token.create(TOKEN.LBRACK);
 
             case ']': return Token.create(TOKEN.RBRACK);
+
+            case ':': return Token.create(TOKEN.COLON);
             
             default: return this.handleDefaultCase(ch);
         }

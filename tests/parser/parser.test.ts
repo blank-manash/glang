@@ -194,19 +194,21 @@ describe("Expression Statements", () => {
 
     describe('8. Objects', () => {
         test("a. Simple Objects", () => {
-            const inp = `{ name = 'blah', val = 1 }`;
-            const mp = new Map<string, any>();
-            mp.set('name', 'blah');
-            mp.set('val', 1);
-            const actual = Parser.create(inp).parse().eval();
-            expect(actual).toStrictEqual(mp);
+            const inp = `{ 'name' : 'blah', 'val' : 1 }`;
+            const actual = Parser.create(inp).parse().statements;
+            const mp = new Map<any, any>();
+            mp.set(StringExpr.create('name'), StringExpr.create('blah'));
+            mp.set(StringExpr.create('val'), Integer.create(1));
+            const exp = [
+               ExprStatement.create(Hash.create(mp))
+            ];
+            expect(actual).toStrictEqual(exp);
         });
     });
 
     describe('9. Functions', () => {
         test('a. Functions?', () => {
-            const inp = `add(a * b[2], b[1], 2 * [1, 2][1])`;
-            const ac = Parser.create(inp).parse().getString();
+            const inp = `add(a * b[2], b[1], 2 * [1, 2][1])`; const ac = Parser.create(inp).parse().getString();
             const exp = `add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))`;
             expect(ac).toStrictEqual(exp);
         });
