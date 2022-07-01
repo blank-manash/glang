@@ -34,7 +34,7 @@ function executor(uinput: string) {
     }
 }
 
-const evalFun = executor;
+const evalFun = lexing;
 
 function evaluator(uinput: string, context, filename, callback) {
     callback(null, evalFun(uinput));
@@ -44,5 +44,5 @@ const replOptions = {
     prompt: "GL-USER >> ",
     eval: evaluator
 }
-
-export const startRepl = () => startReplWith(replOptions);
+startReplWith(replOptions);
+// export const startRepl = () => startReplWith(replOptions);

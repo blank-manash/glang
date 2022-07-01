@@ -3,6 +3,7 @@ export enum TOKEN {
     EOF = "EOF",
     IDENT = "IDENT",
     INT = "INT",
+    STR = "STRING",
     GT = ">",
     LT = "<",
     LPAREN = "(",
@@ -114,6 +115,7 @@ export const TokenFactory = {
     RETURN: Token.create(TOKEN.RETURN),
 
     IDENT: (literal: string) => new Token(TOKEN.IDENT, literal),
-    INT: (num: string) => new Token(TOKEN.INT, num)
+    INT: (num: string) => new Token(TOKEN.INT, num),
+    STR: (str: string) => new Token(TOKEN.STR, str)
 }
 

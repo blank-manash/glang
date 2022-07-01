@@ -4,7 +4,7 @@
  * Date   : 20.06.2022
  */
 
-import {TOKEN, Token} from './token';
+import {TOKEN, Token, TokenFactory} from './token';
 
 function isLetter(char: string): boolean {
     if (char.length != 1)
@@ -34,6 +34,12 @@ function isWhitespace(iden: string) {
     return iden === '\n' || iden === '\t' || iden === '\r' || iden === ' ';
 }
 
+/**
+* The interface to create a lexer.
+* Create the object as <code> Lexer.create(input:string) </code>
+* And then, call for <code> nextToken() </code> to get the nextToken until EOF
+* is encountered
+ */
 export class Lexer {
     private pos: number;
     private length: number;
@@ -117,8 +123,28 @@ export class Lexer {
 
             case ">": return Token.create(TOKEN.GT);
 
+            case '"': return this.createString();
+
             default: return this.handleDefaultCase(ch);
         }
+    }
+    private createString(): Token {
+        let str = '';
+        let ch = this.readChar();
+        const err = new Error('Syntax Error: Unterminated string literal (Missing " for ") ');
+        while (ch !== TOKEN.EOF && ch !== '"') {
+            if (ch === "\\") {
+                ch = this.readChar();
+                if (ch === TOKEN.EOF)
+                    throw err;
+            }
+            str += ch
+            ch = this.readChar();
+        }
+        if (ch !== '"') {
+            throw err;
+        }
+        return TokenFactory.STR(str);
     }
 
 
@@ -145,7 +171,7 @@ export class Lexer {
     private readIdentifier() {
         let ret: string = "";
         let ch = this.peekChar();
-        while(!this.isEnd() && (isLetter(ch) || isDigit(ch))) {
+        while (!this.isEnd() && (isLetter(ch) || isDigit(ch))) {
             ch = this.readChar();
             ret += ch;
             ch = this.peekChar();
@@ -154,11 +180,16 @@ export class Lexer {
     }
 
     private peekChar(): string {
-        if (this.isEnd()) { return TOKEN.EOF;
+        if (this.isEnd()) {
+            return TOKEN.EOF;
         }
         return this.input.charAt(this.pos);
     }
 
+    /**
+     * Reads the charcter, and advances the char position
+     * @returns {string} Returns that character read. 
+     */
     private readChar(): string {
         if (this.isEnd()) {
             return TOKEN.EOF;

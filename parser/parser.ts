@@ -11,6 +11,7 @@ import {Integer} from "./exprs/integer";
 import {NullExpr} from "./exprs/nullExpr";
 import {getInfixPrec, PRECEDENCE} from "./exprs/precedence";
 import {Prefix} from "./exprs/prefix";
+import {StringExpr} from "./exprs/string";
 import {BlockStatements} from "./statements/blockStatements";
 import {ExprStatement} from "./statements/exprStatement";
 import {LetStatement} from "./statements/letStatement";
@@ -18,7 +19,7 @@ import {ReturnExpression, ReturnStatement} from "./statements/returnStatement";
 import {Statement} from "./statements/statement";
 
 export function evalStatements(statements: Statement[]) {
-    let last: any;
+    let last: any = null;
     for(let i = 0; i < statements.length; ++i) {
         last = statements.at(i)!.eval();
         if (last instanceof ReturnExpression)
@@ -46,6 +47,7 @@ export class Parser {
         this.exprTypes = [
             new Identifier(),
             new Integer(),
+            new StringExpr(),
             new Prefix(),
             new BooleanExpr(),
             new Grouped(),

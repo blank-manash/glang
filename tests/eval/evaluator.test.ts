@@ -86,6 +86,32 @@ describe("Evaluation Queries", () => {
             const exp = 5;
             testInput(inp, exp);
         })
+
+        it("e. Apply Function", () => {
+            const inp = `
+            let add = func(a, b) { a + b };
+            let sub = func(a, b) { a - b };
+            let apply = func(a, b, fn) { return fn(a, b) };
+            return apply(2, 5, add);`
+            testInput(inp, 7);
+        });
+    });
+    describe ("4. String Operations", () => {
+        it("a. Concatenation", () => {
+            const inp = `"Extreme" + " " + "Emotions"`;
+            const exp = "Extreme Emotions"
+            testInput(inp, exp);
+        });
+        it("b. Comparisions", () => {
+            let inp = `"abc" < "ac"`;
+            testInput(inp, true);
+            inp = `"aaaa" > "aa"`
+            testInput(inp, true);
+            inp = `"aaa" == "aaa"`
+            testInput(inp, true);
+            inp = `"aaac" > "b"`;
+            testInput(inp, false);
+        });
     });
 });
 

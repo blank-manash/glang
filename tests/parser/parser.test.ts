@@ -3,6 +3,7 @@ import {BooleanExpr} from "../../parser/exprs/boolean";
 import {Identifier} from "../../parser/exprs/identifier";
 import {Infix} from "../../parser/exprs/infix";
 import {Integer} from "../../parser/exprs/integer";
+import {StringExpr} from "../../parser/exprs/string";
 import {Prefix} from "../../parser/exprs/prefix";
 import {Parser} from "../../parser/parser";
 import {ExprStatement} from "../../parser/statements/exprStatement";
@@ -25,6 +26,13 @@ describe("Integar variable let statements", () => {
             LetStatement.create("gazi", BooleanExpr.create(false))
         ];
         expect(actual).toStrictEqual(expected);
+    });
+
+    test("2. String Statements", () => {
+        const inp = `let x = "Remember \\"Me\\""`;
+        const actual = Parser.create(inp).parse().statements;
+        const exp = [ LetStatement.create('x', StringExpr.create('Remember "Me"'))]
+        expect(actual).toStrictEqual(exp);
     });
 
     test("2. Semicolon Test", () => {

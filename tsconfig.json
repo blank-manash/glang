@@ -100,5 +100,5 @@
   },
 
   "exclude": ["node_modules", "tests", "./dist/"],
-  "include": ["./src/**/*.ts"]
+  "include": ["./**/**/*.ts"]
 }
