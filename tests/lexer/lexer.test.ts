@@ -113,4 +113,22 @@ let c = func(a, b) {
             testInput(inp, exp);
         });
     });
+
+    describe("4. Square Brackets", () => {
+        test("a. Simple Expression", () => {
+
+            const inp = `[1, 2, 3];`
+            const exp = [
+                TokenFactory.LBRACK,
+                TokenFactory.INT('1'),
+                TokenFactory.COMMA,
+                TokenFactory.INT('2'),
+                TokenFactory.COMMA,
+                TokenFactory.INT('3'),
+                TokenFactory.RBRACK,
+                TokenFactory.SEMICOLON
+            ];
+            testInput(inp, exp);
+        });
+    });
 });

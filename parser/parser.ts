@@ -1,5 +1,6 @@
 import {Lexer} from "../lexer/lexer";
 import {TOKEN, Token} from "../lexer/token";
+import {ArrayExpr} from "./exprs/array";
 import {BooleanExpr} from "./exprs/boolean";
 import {Expr} from "./exprs/expr";
 import {FuncLiteral} from "./exprs/functionLiteral";
@@ -54,6 +55,7 @@ export class Parser {
             new IfExpr(),
             new FuncLiteral(),
             new NullExpr(),
+            new ArrayExpr(),
         ];
         this.lexer = Lexer.create(_input);
         this.curToken = this.lexer.nextToken();

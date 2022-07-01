@@ -9,8 +9,7 @@ import {Parser} from "../parser";
 import {BlockStatements} from "../statements/blockStatements";
 import {ReturnExpression} from "../statements/returnStatement";
 import {Statement} from "../statements/statement";
-import {Expr} from "./expr";
-import {Identifier} from "./identifier";
+import {Expr, functionArgsParser} from "./expr";
 
 export class FuncLiteral implements Expr {
 
@@ -28,21 +27,7 @@ export class FuncLiteral implements Expr {
     }
 
     parseArgs(p: Parser) {
-        p.readExpectedToken(TOKEN.LPAREN);
-        const args: Expr[] = [];
-        if (p.curTokenIs(TOKEN.RPAREN)) {
-            p.readToken();
-            return args;
-        }
-
-        while (p.nextTokenIs(TOKEN.COMMA)) {
-            const iden = new Identifier().parse(p);
-            args.push(iden);
-            p.readToken();
-        }
-        args.push(new Identifier().parse(p));
-        p.readExpectedToken(TOKEN.RPAREN, "Incorrect Function Expression, Missing ) for (");
-        return args;
+        return functionArgsParser(p);
     }
 
     execute(evalArgs: any[]) {

@@ -11,8 +11,10 @@
  *
  */
 
+import {HeadFn} from "./exprs/basicFunctions/head";
 import {Length} from "./exprs/basicFunctions/len";
 import {PushFn} from "./exprs/basicFunctions/push";
+import {TailFn} from "./exprs/basicFunctions/tail";
 import {FuncLiteral} from "./exprs/functionLiteral";
 
 
@@ -84,6 +86,8 @@ class ExecutionContext {
         this.basic = new Map<string, FuncLiteral>();
         this.basic.set("len", Length.create());
         this.basic.set("push", PushFn.create());
+        this.basic.set("head", HeadFn.create());
+        this.basic.set("tail", TailFn.create());
     }
     isBuiltin(str: string): boolean {
         return this.basic.has(str);

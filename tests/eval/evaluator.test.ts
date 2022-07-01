@@ -133,7 +133,7 @@ describe("Evaluation Queries", () => {
             expect(() => Parser.create(inp).parse().eval()).toThrowError();
         });
 
-        it("b. push()", () => {
+        it("c. push()", () => {
             const inp = `let str = "Hello";
             let btr = "World";
             str = push(str, " ");
@@ -141,6 +141,18 @@ describe("Evaluation Queries", () => {
             return str;
             `
             const exp = 'Hello World';
+            testInput(inp, exp);
+        });
+
+        it("d. tail()", () => {
+            let inp = `let x = [1, "bee", 8]; return tail(x)`
+            let exp = ["bee", 8];
+            testInput(inp, exp);
+        });
+
+        it("e. head()", () => {
+            let inp = `let y = ['boo', 42, 'every', 12]; return head(tail(y))`;
+            const exp = 42;
             testInput(inp, exp);
         });
     });

@@ -123,16 +123,28 @@ export class Lexer {
 
             case ">": return Token.create(TOKEN.GT);
 
-            case '"': return this.createString();
+            case '"': return this.createString('"');
 
+            case "'": return this.createString("'");
+
+            case '[': return Token.create(TOKEN.LBRACK);
+
+            case ']': return Token.create(TOKEN.RBRACK);
+            
             default: return this.handleDefaultCase(ch);
         }
     }
-    private createString(): Token {
+    /**
+     * Reads a string, where backslash characters are respected.
+     *
+     * @throws {Error} if the string is Unterminated
+     * @returns {Token} The string token associated with the string;
+     */
+    private createString(delim: string): Token {
         let str = '';
         let ch = this.readChar();
         const err = new Error('Syntax Error: Unterminated string literal (Missing " for ") ');
-        while (ch !== TOKEN.EOF && ch !== '"') {
+        while (ch !== TOKEN.EOF && ch !== delim) {
             if (ch === "\\") {
                 ch = this.readChar();
                 if (ch === TOKEN.EOF)
@@ -141,7 +153,7 @@ export class Lexer {
             str += ch
             ch = this.readChar();
         }
-        if (ch !== '"') {
+        if (ch !== delim) {
             throw err;
         }
         return TokenFactory.STR(str);
@@ -168,7 +180,11 @@ export class Lexer {
         return this.pos >= this.length;
     }
 
-    private readIdentifier() {
+    /**
+     * Reads a variable, and returns the identifier
+     * @returns {string} Returns the name of the identifier;
+     */
+    private readIdentifier(): string {
         let ret: string = "";
         let ch = this.peekChar();
         while (!this.isEnd() && (isLetter(ch) || isDigit(ch))) {
