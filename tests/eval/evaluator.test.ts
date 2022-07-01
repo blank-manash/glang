@@ -179,13 +179,13 @@ describe("Evaluation Queries", () => {
     });
 
     describe('7. Objects', () => {
-        test('1. Evaluation', () => {
+        test('a. Evaluation', () => {
             const inp = `let name = 'hi'; let obj = { name : 'Yo' }; obj['hi'];`
             const exp = 'Yo';
             testInput(inp, exp);
         });
-        test('2. Complex Evaluation', () => {
-            const inp =  `let two = "two";
+        test('b. Complex Evaluation', () => {
+            const inp = `let two = "two";
                 let o = {
                     "one": 10 - 9,
                     two: 1 + 1,
@@ -197,6 +197,22 @@ describe("Evaluation Queries", () => {
                 return [o['one'], o[two], o['three'], o[4], o[true], o[false]];
                 `
             const exp = [1, 2, 3, 4, 5, 6];
+            testInput(inp, exp);
+        });
+
+        test('c. Array inside of Objects', () => {
+            const inp = `let people = [{"name": "Alice", "age": 24}, {"name": "Anna", "age": 28}];
+            return people[1]['age'];`;
+            const exp = 28;
+            testInput(inp, exp);
+        })
+    });
+
+    describe('8. Puts', () => {
+        test('a. Print', () => {
+
+            const inp = `puts('Hello')`;
+            const exp = null;
             testInput(inp, exp);
         });
     });

@@ -14,6 +14,7 @@
 import {HeadFn} from "./exprs/basicFunctions/head";
 import {Length} from "./exprs/basicFunctions/len";
 import {PushFn} from "./exprs/basicFunctions/push";
+import {Puts} from "./exprs/basicFunctions/puts";
 import {TailFn} from "./exprs/basicFunctions/tail";
 import {FuncLiteral} from "./exprs/functionLiteral";
 
@@ -88,6 +89,7 @@ class ExecutionContext {
         this.basic.set("push", PushFn.create());
         this.basic.set("head", HeadFn.create());
         this.basic.set("tail", TailFn.create());
+        this.basic.set('puts', Puts.create());
     }
     isBuiltin(str: string): boolean {
         return this.basic.has(str);

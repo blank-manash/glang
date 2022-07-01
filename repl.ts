@@ -30,11 +30,11 @@ function executor(uinput: string) {
     try {
         return Parser.create(uinput).parse().eval();
     } catch (err: any) {
-        return "Heya! You might have some parsing errors".concat(' ==> ', err.message);
+        return err.message;
     }
 }
 
-const evalFun = lexing;
+const evalFun = executor;
 
 function evaluator(uinput: string, context, filename, callback) {
     callback(null, evalFun(uinput));
