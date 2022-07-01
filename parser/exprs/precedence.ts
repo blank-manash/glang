@@ -2,14 +2,13 @@ import {TOKEN} from "../../lexer/token";
 
 export const enum PRECEDENCE {
     LOWEST,
-    INDEX,
-    ASSIGN,
     EQUALS,
     LESSGREATER,
     SUM,
     PRODUCT,
     PREFIX,
     CALL,
+    INDEX,
 }
 
 
@@ -24,7 +23,7 @@ infixPreMap.set(TOKEN.MINUS, PRECEDENCE.SUM);
 infixPreMap.set(TOKEN.MUL, PRECEDENCE.PRODUCT);
 infixPreMap.set(TOKEN.DIV, PRECEDENCE.PRODUCT);
 infixPreMap.set(TOKEN.LPAREN, PRECEDENCE.CALL);
-infixPreMap.set(TOKEN.ASSIGN, PRECEDENCE.ASSIGN);
+infixPreMap.set(TOKEN.ASSIGN, PRECEDENCE.EQUALS);
 infixPreMap.set(TOKEN.LBRACK, PRECEDENCE.INDEX);
 
 export function getInfixPrec(token: TOKEN) {

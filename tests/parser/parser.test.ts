@@ -9,7 +9,7 @@ import {Parser} from "../../parser/parser";
 import {ExprStatement} from "../../parser/statements/exprStatement";
 import {LetStatement} from "../../parser/statements/letStatement";
 import {Statement} from "../../parser/statements/statement";
-import { Hash } from "../../parser/exprs/hashes";
+import {Hash} from "../../parser/exprs/hashes";
 
 describe("Integar variable let statements", () => {
     test("1.Simple Let", () => {
@@ -200,6 +200,23 @@ describe("Expression Statements", () => {
             mp.set('val', 1);
             const actual = Parser.create(inp).parse().eval();
             expect(actual).toStrictEqual(mp);
+        });
+    });
+
+    describe('9. Functions', () => {
+        test('a. Functions?', () => {
+            const inp = `add(a * b[2], b[1], 2 * [1, 2][1])`;
+            const ac = Parser.create(inp).parse().getString();
+            const exp = `add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))`;
+            expect(ac).toStrictEqual(exp);
+        });
+
+        test('b. Functions PRECEDENCE', () => {
+
+            const inp = `a * [1, 2, 3, 4][b * c] * d`
+            const ac = Parser.create(inp).parse().getString();
+            const exp = `((a * ([1, 2, 3, 4][(b * c)])) * d)`;
+            expect(ac).toStrictEqual(exp);
         });
     });
 

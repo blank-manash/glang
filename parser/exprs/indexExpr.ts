@@ -24,7 +24,7 @@ export class IndexExpr implements Expr {
     }
 
     toString(): string {
-        return this.left.toString() + '[' + this.right.toString() + ']';
+        return '(' + this.left.toString() + '[' + this.right.toString() + '])';
     }
     eval() {
         const left = this.left.eval();

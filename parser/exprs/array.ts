@@ -19,7 +19,7 @@ export class ArrayExpr implements Expr {
         return ar;
     }
     toString(): string {
-        return this.elems.toString();
+        return '[' + this.elems.join(', ') + ']';
     }
     eval() {
         return this.elems.map(e => e.eval());

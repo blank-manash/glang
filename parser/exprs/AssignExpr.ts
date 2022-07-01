@@ -13,7 +13,7 @@ export class AssignExpr implements Expr {
     }
     parse(p: Parser, left: Expr): Expr {
         p.readExpectedToken(TOKEN.ASSIGN);
-        const right = p.parseExpr(PRECEDENCE.ASSIGN);
+        const right = p.parseExpr(PRECEDENCE.EQUALS);
         return AssignExpr.create(left, right);
     }
     static create(left: Expr, right: Expr): Expr {
@@ -24,7 +24,7 @@ export class AssignExpr implements Expr {
     }
 
     toString(): string {
-        return this.left.toString() + " = " + this.right.toString();
+        return '(' + this.left.toString() + " = " + this.right.toString() + ')';
     }
     eval() {
         if (!(this.left instanceof Identifier)) {

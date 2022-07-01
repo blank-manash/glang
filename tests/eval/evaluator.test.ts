@@ -163,6 +163,19 @@ describe("Evaluation Queries", () => {
             const exp = 4;
             testInput(inp, exp);
         });
+        test("b. Weird Access Should not work", () => {
+            const inp = `let x = 'what'; x[1]`;
+            expect(() => Parser.create(inp).parse().eval()).toThrowError();
+        });
+        test("c. Out of bounds Error", () => {
+            const inp = `let x = 4; let y = [1, 2]; y[x]`;
+            expect(() => Parser.create(inp).parse().eval()).toThrowError();
+        });
+        test("d. Negetive Indices", () => {
+            const inp = `let x = [1, 2, 'hi', 4]; x[-2]`;
+            const exp = 'hi';
+            testInput(inp, exp);
+        });
     });
 });
 
