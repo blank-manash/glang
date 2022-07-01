@@ -30,7 +30,7 @@ export enum TOKEN {
     ELSE_IF = "elif",
     ELSE = "else",
     RETURN = "return",
-    NULL = "NULL"
+    NULL = "NULL",
 }
 
 const keywords: Map<string, TOKEN> = new Map<string, TOKEN>();

@@ -1,5 +1,5 @@
 import {TOKEN} from "../../lexer/token";
-import {Parser} from "../parser";
+import {parseBracedStatements, Parser} from "../parser";
 import {BlockStatements} from "../statements/blockStatements";
 import {Statement} from "../statements/statement";
 import {Elif} from "./elif";
@@ -18,7 +18,7 @@ export class IfExpr implements Expr {
     parse(p: Parser): Expr {
         p.readExpectedToken(TOKEN.IF); // if
         const condition = new Grouped().parse(p); // ( <expr> )
-        const then = new BlockStatements().parse(p); // { <statement>* }
+        const then = BlockStatements.create(parseBracedStatements(p));
         let elseExpr: Expr | false = false;
 
         if (p.peekToken().getToken() === TOKEN.ELSE) {

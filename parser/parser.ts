@@ -5,6 +5,7 @@ import {BooleanExpr} from "./exprs/boolean";
 import {Expr} from "./exprs/expr";
 import {FuncLiteral} from "./exprs/functionLiteral";
 import {Grouped} from "./exprs/grouped";
+import {Hash} from "./exprs/hashes";
 import {Identifier} from "./exprs/identifier";
 import {IfExpr} from "./exprs/if";
 import {Infix} from "./exprs/infix";
@@ -21,7 +22,7 @@ import {Statement} from "./statements/statement";
 
 export function evalStatements(statements: Statement[]) {
     let last: any = null;
-    for(let i = 0; i < statements.length; ++i) {
+    for (let i = 0; i < statements.length; ++i) {
         last = statements.at(i)!.eval();
         if (last instanceof ReturnExpression)
             return last;
@@ -42,7 +43,6 @@ export class Parser {
         this.statementType = [
             new LetStatement(),
             new ExprStatement(),
-            new BlockStatements(),
             new ReturnStatement()
         ];
         this.exprTypes = [
@@ -56,6 +56,7 @@ export class Parser {
             new FuncLiteral(),
             new NullExpr(),
             new ArrayExpr(),
+            new Hash(),
         ];
         this.lexer = Lexer.create(_input);
         this.curToken = this.lexer.nextToken();
@@ -160,4 +161,22 @@ export class Parser {
     set statements(value: Array<Statement>) {
         this._statements = value;
     }
+}
+
+export function parseBlockStatements(p: Parser) {
+    const statements: Statement[] = [];
+    while (p.peekToken().getToken() !== TOKEN.RBRACE) {
+        if (p.peekToken().getToken() === TOKEN.EOF) {
+            throw new Error(`Syntax Error: Unterminated { Brace`);
+        }
+        const stmt = p.parseStatement();
+        statements.push(stmt);
+    }
+    return statements;
+}
+export function parseBracedStatements(p: Parser) {
+    p.readExpectedToken(TOKEN.LBRACE);
+    const stmts = parseBlockStatements(p);
+    p.readExpectedToken(TOKEN.RBRACE);
+    return stmts;
 }

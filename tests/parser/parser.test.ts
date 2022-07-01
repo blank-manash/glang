@@ -9,6 +9,7 @@ import {Parser} from "../../parser/parser";
 import {ExprStatement} from "../../parser/statements/exprStatement";
 import {LetStatement} from "../../parser/statements/letStatement";
 import {Statement} from "../../parser/statements/statement";
+import { Hash } from "../../parser/exprs/hashes";
 
 describe("Integar variable let statements", () => {
     test("1.Simple Let", () => {
@@ -31,7 +32,7 @@ describe("Integar variable let statements", () => {
     test("2. String Statements", () => {
         const inp = `let x = "Remember \\"Me\\""`;
         const actual = Parser.create(inp).parse().statements;
-        const exp = [ LetStatement.create('x', StringExpr.create('Remember "Me"'))]
+        const exp = [LetStatement.create('x', StringExpr.create('Remember "Me"'))]
         expect(actual).toStrictEqual(exp);
     });
 
@@ -82,8 +83,8 @@ describe("Expression Statements", () => {
             const actual = Parser.create(inp).parse().statements;
             const expected = [
                 ExprStatement.create(Infix.create
-                                     (Integer.create(5), TokenFactory.PLUS, Infix.create
-                                      (Integer.create(10), TokenFactory.MUL, Integer.create(3)))),
+                    (Integer.create(5), TokenFactory.PLUS, Infix.create
+                        (Integer.create(10), TokenFactory.MUL, Integer.create(3)))),
             ];
             expect(actual).toStrictEqual(expected);
         });
@@ -188,6 +189,18 @@ describe("Expression Statements", () => {
             const actual = Parser.create(inp).parse().getString();
             const expected = `sub(5, 45, func(x, y) {return add()})`
             expect(actual).toStrictEqual(expected);
+        });
+    });
+
+    describe('8. Objects', () => {
+        test("a. Simple Objects", () => {
+            const inp = `{ name = 'blah', val = 1 }`;
+            const mp = new Map<string, any>();
+            mp.set('name', 'blah');
+            mp.set('val', 1);
+            const actual = Parser.create(inp).parse().eval();
+
+            expect(actual).toStrictEqual(mp);
         });
     });
 

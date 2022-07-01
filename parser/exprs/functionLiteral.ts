@@ -5,7 +5,7 @@
  */
 import {TOKEN} from "../../lexer/token";
 import {context} from "../context";
-import {Parser} from "../parser";
+import {parseBracedStatements, Parser} from "../parser";
 import {BlockStatements} from "../statements/blockStatements";
 import {ReturnExpression} from "../statements/returnStatement";
 import {Statement} from "../statements/statement";
@@ -22,7 +22,7 @@ export class FuncLiteral implements Expr {
     parse(p: Parser): Expr {
         p.readExpectedToken(TOKEN.FUNCTION);
         const args = this.parseArgs(p);
-        const body = new BlockStatements().parse(p);
+        const body = BlockStatements.create(parseBracedStatements(p));
         return FuncLiteral.create(args, body);
     }
 

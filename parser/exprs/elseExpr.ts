@@ -4,7 +4,7 @@
  * Date   : 29.06.2022
  */
 import {TOKEN} from "../../lexer/token";
-import {Parser} from "../parser";
+import {parseBracedStatements, Parser} from "../parser";
 import {BlockStatements} from "../statements/blockStatements";
 import {Statement} from "../statements/statement";
 import {Expr} from "./expr";
@@ -16,9 +16,9 @@ export class ElseExpr implements Expr {
     }
 
     parse(p: Parser): Expr {
-            p.readExpectedToken(TOKEN.ELSE);
-            const then = new BlockStatements().parse(p); // { <statements> }
-            return ElseExpr.create(then);
+        p.readExpectedToken(TOKEN.ELSE);
+        const then = BlockStatements.create(parseBracedStatements(p)); // { <statements> }
+        return ElseExpr.create(then);
     }
     static create(then: Statement): Expr {
         const ex = new ElseExpr();
