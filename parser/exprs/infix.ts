@@ -4,9 +4,11 @@
  * Date   : 29.06.2022
  */
 import {TOKEN, Token} from "../../lexer/token";
+import {context} from "../context";
 import {Parser} from "../parser";
 import {CallExpr} from "./callExpr";
 import {Expr} from "./expr";
+import {Identifier} from "./identifier";
 import {getInfixPrec} from "./precedence";
 
 const enum EvalTypes {
@@ -37,6 +39,7 @@ export class Infix implements Expr {
             TOKEN.NEQUAL,
             TOKEN.LT,
             TOKEN.GT,
+            TOKEN.ASSIGN,
             TOKEN.LPAREN
         ];
         return acceptedTokens.includes(token);
@@ -72,6 +75,10 @@ export class Infix implements Expr {
         return infix;
     }
     eval() {
+        if (this.token.getToken() === TOKEN.ASSIGN) {
+            this.evalAssignStatement();
+            return;
+        }
         const leftEval = this.left.eval();
         const rightEval = this.right.eval();
         switch (this.getEvalType(leftEval, rightEval)) {
@@ -81,6 +88,14 @@ export class Infix implements Expr {
             case EvalTypes.NULL_RIGHT: throw new Error(`Runtime Error: Cannot Evaluate Expression, ${this.right.toString()} is null`);
             default: throw new Error(`Evaluation Error: Types of ${this.left.toString()} and ${this.right.toString()} are not compatible`);
         }
+    }
+    evalAssignStatement() {
+        if (!(this.left instanceof Identifier)) {
+            throw new Error(`{this.left.toString()} is not a variable that can be assigned`);
+        }
+        const name = this.left.name;
+        const val = this.right.eval();
+        context.setForce(name, val);
     }
     stringEval(leftEval: any, rightEval: any) {
         switch (this.token.getToken()) {

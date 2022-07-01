@@ -113,5 +113,36 @@ describe("Evaluation Queries", () => {
             testInput(inp, false);
         });
     });
+
+    describe("5. Builtin Functions", () => {
+        it("a. len()", () => {
+            const inp: string[] = [
+                `len("Blah Bluh")`,
+                `len("Bonjur")`,
+                `len("Cute")`
+            ];
+            const exp: number[] = [9, 6, 4];
+            for(let i = 0; i < 3; ++i) {
+                testInput(inp[i], exp[i]);
+            }
+        });
+        it("b. Can't declare Builtin", () => {
+            let inp = `let len = 24`;
+            expect(() => Parser.create(inp).parse().eval()).toThrowError();
+            inp = `let x = func(len, a) { return len(5) + a }; return x(24, 2);`;
+            expect(() => Parser.create(inp).parse().eval()).toThrowError();
+        });
+
+        it("b. push()", () => {
+            const inp = `let str = "Hello";
+            let btr = "World";
+            str = push(str, " ");
+            str = push(str, btr);
+            return str;
+            `
+            const exp = 'Hello World';
+            testInput(inp, exp);
+        });
+    });
 });
 
