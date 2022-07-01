@@ -77,7 +77,7 @@ describe("Evaluation Queries", () => {
             const exp = 14;
             testInput(inp, exp);
         });
-        it ("d. Partial Type Functions", () => {
+        it("d. Partial Type Functions", () => {
             const inp = `
             let add = func(x) { func(n) { x + n }; };
             let addTwo = add(2);
@@ -96,7 +96,7 @@ describe("Evaluation Queries", () => {
             testInput(inp, 7);
         });
     });
-    describe ("4. String Operations", () => {
+    describe("4. String Operations", () => {
         it("a. Concatenation", () => {
             const inp = `"Extreme" + " " + "Emotions"`;
             const exp = "Extreme Emotions"
@@ -122,7 +122,7 @@ describe("Evaluation Queries", () => {
                 `len("Cute")`
             ];
             const exp: number[] = [9, 6, 4];
-            for(let i = 0; i < 3; ++i) {
+            for (let i = 0; i < 3; ++i) {
                 testInput(inp[i], exp[i]);
             }
         });
@@ -153,6 +153,14 @@ describe("Evaluation Queries", () => {
         it("e. head()", () => {
             let inp = `let y = ['boo', 42, 'every', 12]; return head(tail(y))`;
             const exp = 42;
+            testInput(inp, exp);
+        });
+    });
+
+    describe('6. Arrays', () => {
+        test("a. Random access", () => {
+            const inp = `[1, 2, 4][2]`;
+            const exp = 4;
             testInput(inp, exp);
         });
     });

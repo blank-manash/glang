@@ -4,11 +4,11 @@
  * Date   : 29.06.2022
  */
 import {TOKEN, Token} from "../../lexer/token";
-import {context} from "../context";
 import {Parser} from "../parser";
+import {AssignExpr} from "./AssignExpr";
 import {CallExpr} from "./callExpr";
 import {Expr} from "./expr";
-import {Identifier} from "./identifier";
+import {IndexExpr} from "./indexExpr";
 import {getInfixPrec} from "./precedence";
 
 const enum EvalTypes {
@@ -40,17 +40,24 @@ export class Infix implements Expr {
             TOKEN.LT,
             TOKEN.GT,
             TOKEN.ASSIGN,
-            TOKEN.LPAREN
+            TOKEN.LPAREN,
+            TOKEN.LBRACK
         ];
         return acceptedTokens.includes(token);
     }
 
     parse(p: Parser, left: Expr): Expr {
         const token = p.peekToken();
-        if (p.curTokenIs(TOKEN.LPAREN)) {
-            p.readToken();
-            return this.parseCallExpr(p, left);
+        switch(token.getToken()) {
+            case TOKEN.LPAREN: return this.parseCallExpr(p, left)
+            case TOKEN.LBRACK: return new IndexExpr().parse(p, left);
+            case TOKEN.ASSIGN: return new AssignExpr().parse(p, left);
+            default: return this.defaultParser(token, p, left);
         }
+    }
+
+
+    private defaultParser(token: Token, p: Parser, left: Expr) {
         const curPrec = getInfixPrec(token.getToken());
         p.readToken();
         const right = p.parseExpr(curPrec);
@@ -74,13 +81,14 @@ export class Infix implements Expr {
         infix.token = token;
         return infix;
     }
-    eval() {
-        if (this.token.getToken() === TOKEN.ASSIGN) {
-            this.evalAssignStatement();
-            return;
-        }
+    eval() { // TODO: Refactor This, this is ugly.
+        return this.defaultEval();
+    }
+
+    private defaultEval() {
         const leftEval = this.left.eval();
         const rightEval = this.right.eval();
+
         switch (this.getEvalType(leftEval, rightEval)) {
             case EvalTypes.INTEGER: return this.integerEval(leftEval, rightEval);
             case EvalTypes.STRING: return this.stringEval(leftEval, rightEval);
@@ -89,14 +97,7 @@ export class Infix implements Expr {
             default: throw new Error(`Evaluation Error: Types of ${this.left.toString()} and ${this.right.toString()} are not compatible`);
         }
     }
-    evalAssignStatement() {
-        if (!(this.left instanceof Identifier)) {
-            throw new Error(`{this.left.toString()} is not a variable that can be assigned`);
-        }
-        const name = this.left.name;
-        const val = this.right.eval();
-        context.setForce(name, val);
-    }
+
     stringEval(leftEval: any, rightEval: any) {
         switch (this.token.getToken()) {
             case TOKEN.PLUS: return leftEval + rightEval;

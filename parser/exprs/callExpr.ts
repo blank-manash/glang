@@ -19,6 +19,7 @@ export class CallExpr implements Expr {
     }
 
     parse(p: Parser, func: Expr): Expr {
+        p.readExpectedToken(TOKEN.LPAREN);
         const args = this.parseCallArgs(p);
         return CallExpr.create(func, args);
     }

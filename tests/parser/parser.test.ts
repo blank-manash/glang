@@ -199,7 +199,6 @@ describe("Expression Statements", () => {
             mp.set('name', 'blah');
             mp.set('val', 1);
             const actual = Parser.create(inp).parse().eval();
-
             expect(actual).toStrictEqual(mp);
         });
     });
