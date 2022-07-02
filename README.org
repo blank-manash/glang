@@ -63,5 +63,23 @@ The variables in =glang= follow a blocked scope. As such,
 
 #+end_src
 
+
+** Objects
+
+Objects are like hashes, which have expressions, mapped to expressions. You can use objects as such.
+
+#+begin_src typescript
+  let two = "two";
+  let o = {
+       "one": 10 - 9,
+       two: 1 + 1,
+       "thr" + "ee": 6 / 2,
+       4: 4,
+       true: 5,
+       false: 6
+   }
+  return [o['one'], o[two], o['three'], o[4], o[true], o[false]]; // [1, 2, 3, 4, 5, 6]
+#+end_src
+
 * TODO Installation
 * TODO Usage
