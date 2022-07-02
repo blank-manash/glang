@@ -12,6 +12,7 @@
  */
 
 import {HeadFn} from "./exprs/basicFunctions/head";
+import {IsEmptyFn} from "./exprs/basicFunctions/isEmpty";
 import {Length} from "./exprs/basicFunctions/len";
 import {PushFn} from "./exprs/basicFunctions/push";
 import {Puts} from "./exprs/basicFunctions/puts";
@@ -60,16 +61,16 @@ class ExecutionContext {
     setVariable(name: string, val: any) {
         const mp = this.getTop();
         if (mp.has(name)) {
-            throw new Error(`Variable ${name} is already declared`);
+            throw new Error(`Runtime Error: Variable ${name} is already declared`);
         }
         if (this.basic.has(name)) {
-            throw new Error(`Cannot Declare builtin function: ${name}`);
+            throw new Error(`Runtime Error: Cannot Declare builtin function: ${name}`);
         }
         mp.set(name, val);
     }
     setForce(name: string, val: any) {
         if (this.isBuiltin(name)) {
-            throw new Error(`Cannot set builtin function ${name} as arguments`);
+            throw new Error(`Runtime Error: Cannot set builtin function ${name} as arguments`);
         }
         const mp = this.getTop();
         mp.set(name, val);
@@ -77,9 +78,12 @@ class ExecutionContext {
     getVariable(name: string) {
         const mp = this.getTop();
         if (!mp.has(name) && !this.basic.has(name)) {
-            throw new Error(`Variable ${name} is not declared`);
+            throw new Error(`Runtime Error: Variable ${name} is not declared`);
         }
-        return mp.get(name) || this.basic.get(name)!;
+        if(mp.has(name)) {
+            return mp.get(name)!;
+        }
+        return this.basic.get(name)!;
     }
     constructor() {
         this.stack = new Stack<Map<string, any>>();
@@ -90,6 +94,7 @@ class ExecutionContext {
         this.basic.set("head", HeadFn.create());
         this.basic.set("tail", TailFn.create());
         this.basic.set('puts', Puts.create());
+        this.basic.set('isEmpty', IsEmptyFn.create());
     }
     isBuiltin(str: string): boolean {
         return this.basic.has(str);

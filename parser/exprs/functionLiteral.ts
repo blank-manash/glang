@@ -12,7 +12,6 @@ import {Statement} from "../statements/statement";
 import {Expr, functionArgsParser} from "./expr";
 
 export class FuncLiteral implements Expr {
-
     args: Expr[];
     body: Statement; // BlockStatements
     env: Map<string, any> = new Map<string, any>(); 
@@ -32,7 +31,7 @@ export class FuncLiteral implements Expr {
 
     execute(evalArgs: any[]) {
         if (evalArgs.length !== this.args.length) {
-            throw new Error("Runtime Error: Incorrect number of functions arguments");
+            throw new Error("Runtime Error: Incorrect number of functions arguments: " + this.toString());
         }
         context.pushContext(this.env);
         for (let i = 0; i < evalArgs.length; ++i) {

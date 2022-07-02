@@ -1,6 +1,7 @@
 import {TOKEN, Token} from "../../lexer/token";
 import {context} from "../context";
-import {Expr} from "../exprs/expr";import {Identifier} from "../exprs/identifier";
+import {Expr} from "../exprs/expr";import {FuncLiteral} from "../exprs/functionLiteral";
+import {Identifier} from "../exprs/identifier";
  import {PRECEDENCE} from "../exprs/precedence";
 import {Parser} from "../parser";
 import {Statement, STATEMENTS} from "./statement";
@@ -37,7 +38,10 @@ export class LetStatement extends Statement {
     eval() {
         const val = this.value.eval();
         context.setVariable(this.name, val);
-        return '';
+        if (val instanceof FuncLiteral) {
+            val.env.set(this.name, val);
+        }
+        return null;
     }
 
     parse(p: Parser): Statement {

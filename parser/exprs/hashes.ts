@@ -12,7 +12,8 @@ export class Hash implements Expr {
     parse(p: Parser): Expr {
         const mp = new Map<Expr, Expr>();
         p.readExpectedToken(TOKEN.LBRACE);
-        if (p.nextTokenIs(TOKEN.RBRACE)) {
+        if (p.curTokenIs(TOKEN.RBRACE)) {
+            p.readToken();
             return Hash.empty();
         }
         this.parseEntry(p, mp);
