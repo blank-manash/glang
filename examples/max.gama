@@ -1,0 +1,15 @@
+let ar = [1, 5, 7, 9, 10, 25];
+
+let getMax = func(arr, already) {
+    if(isEmpty(arr)) {
+        return already
+    }
+    let x = head(arr);
+    let nex = tail(arr);
+    if (x > already) {
+        return getMax(nex, x);
+    }
+    return getMax(nex, already);
+}
+
+puts(getMax(ar, -100000));

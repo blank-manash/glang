@@ -1,3 +1,5 @@
+import {readFileSync} from "fs";
+import path from "path";
 import {context} from "../../parser/context";
 import {Parser} from "../../parser/parser";
 
@@ -19,6 +21,19 @@ describe("Evaluation Queries", () => {
         });
         it("b. Nested Return", () => {
             const inp = `if (true) { if (10 > 1) { return 5 } } return 50`;
+            const exp = 5;
+            testInput(inp, exp);
+        });
+        it('c. If else if', () => {
+            const inp =
+                `let x = 5;
+                if (x != 5) {
+                    2
+                } elif (x > 10) {
+                    3
+                } else {
+                    5
+                }`
             const exp = 5;
             testInput(inp, exp);
         });
@@ -155,6 +170,13 @@ describe("Evaluation Queries", () => {
             const exp = 42;
             testInput(inp, exp);
         });
+
+        it('f. isEmpty()', () => {
+            let inp = `let y = {}; isEmpty(y)`;
+            testInput(inp, true);
+            inp = `let ar = [1, 2, 56, 7]; isEmpty(ar)`;
+            testInput(inp, false);
+        });
     });
 
     describe('6. Arrays', () => {
@@ -215,6 +237,25 @@ describe("Evaluation Queries", () => {
             const exp = null;
             testInput(inp, exp);
         });
+    });
+    describe('9. Source Files', () => {
+        const dir = path.join(__dirname, '..', '..', 'examples');
+
+        function testSource(file: string, expected: any) {
+            const filePath = path.join(dir, file);
+            const data = readFileSync(filePath).toString();
+            const spy = jest.spyOn(console, 'log');
+            Parser.create(data).parse().eval();
+            expect(spy).toHaveBeenCalledWith(expected);
+        }
+        test('1. Fibonacci', () => {
+            const exp = 5;
+            testSource('fibo.gama', exp);
+        });
+        test('2. Maximum in array', () => {
+            testSource('max.gama', 25);
+        });
+        
     });
 });
 

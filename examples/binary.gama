@@ -1,0 +1,17 @@
+let pyramid = func(depth) {
+  if (depth == 4) {
+    return null;
+  }
+  if (depth == 1) {
+    puts('  *')
+  }
+  if (depth == 2) {
+    puts(' * *');
+  }
+  if (depth == 3) {
+    puts('*   *')
+  }
+  pyramid(depth + 1);
+}
+
+pyramid(1);

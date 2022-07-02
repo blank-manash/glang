@@ -4,7 +4,7 @@
   "description": "A Compiler For the Gamakshi Language",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node index.js",
+    "start": "ts-node index.ts",
     "test": "npx jest test",
     "repl": "npx ts-node repl.ts"
   },
@@ -17,6 +17,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.1",
     "@types/jest": "^27.5.1",
+    "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "chai": "^4.3.6",

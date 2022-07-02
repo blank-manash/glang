@@ -16,9 +16,7 @@ export class ReturnStatement extends Statement {
     parse(p: Parser): Statement {
         p.readExpectedToken(TOKEN.RETURN);
         const expr = p.parseExpr(PRECEDENCE.LOWEST);
-        if (p.curTokenIs(TOKEN.SEMICOLON)) {
-            p.readToken()
-        }
+        this.skipSemicolon(p);
         return ReturnStatement.create(expr);
     }
     static create(expr: Expr): Statement {

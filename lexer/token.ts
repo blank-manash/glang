@@ -44,6 +44,7 @@ keywords.set("false", TOKEN.FALSE);
 keywords.set("true", TOKEN.TRUE);
 keywords.set("let", TOKEN.LET);
 keywords.set("func", TOKEN.FUNCTION);
+keywords.set("null", TOKEN.NULL);
 
 export class Token {
     private _token: TOKEN;

@@ -90,7 +90,7 @@ export class Parser {
             if (msg) {
                 throw new Error(msg);
             } else {
-                throw Error(`Incorrect Token Type: Expected: ${token}\nButReceived ${this.nextToken}`);
+                throw Error(`Incorrect Token Type: Expected: ${expectedToken}\nBut Received ${token.getLiteral()}`);
             }
         }
         this.advanceTokens();

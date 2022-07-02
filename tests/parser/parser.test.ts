@@ -220,6 +220,12 @@ describe("Expression Statements", () => {
             const exp = `((a * ([1, 2, 3, 4][(b * c)])) * d)`;
             expect(ac).toStrictEqual(exp);
         });
+        test('c. Mul Functions', () => {
+            const inp = `fib(1) + fib(0)`;
+            const ac = Parser.create(inp).parse().getString();
+            const exp = `(fib(1) + fib(0))`;
+            expect(ac).toStrictEqual(exp);
+        });
     });
 
 });

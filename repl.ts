@@ -44,5 +44,7 @@ const replOptions = {
     prompt: "GL-USER >> ",
     eval: evaluator
 }
-startReplWith(replOptions);
-// export const startRepl = () => startReplWith(replOptions);
+//startReplWith(replOptions);
+export function startRepl() {
+    startReplWith(replOptions);
+}
