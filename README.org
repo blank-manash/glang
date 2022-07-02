@@ -15,11 +15,11 @@ An example code is provided below
   let x = 51 + 21;
 
   let add = func(a, b) {
-    a + b // Semi-colons are optional and '//' triggers a comment
+    a + b 
   }
 
   let add5 = func(x) {
-    return add(5,x); // Partial Application
+    return add(5,x); 
   }
 #+end_src
 
@@ -46,6 +46,8 @@ This means that the above is completely valid (Implicit Returns).
 As you can see return statements are optional, supporting implicit returns.
 
 Like =javascript= and (not so) python, ';' are also optional.
+
+*NOTE*: Comments are not supported yet.
 
 ** Variable Scopes
 
@@ -81,5 +83,34 @@ Objects are like hashes, which have expressions, mapped to expressions. You can 
   return [o['one'], o[two], o['three'], o[4], o[true], o[false]]; // [1, 2, 3, 4, 5, 6]
 #+end_src
 
-* TODO Installation
-* TODO Usage
+
+* Installation and Usage
+
+You can download the [[https://github.com/blank-manash/glang/releases/tag/v1.0.0][binary]], and directly use it as follows. 
+
+#+begin_src sh
+  ./<your-binary-name> <source-file>
+#+end_src
+
+Or to start the =REPL=, run it without any arguments.
+
+If you decide to download the source code, run =npm install= in the directory, then you can do the following.
+
+#+begin_src bash
+  tsc --build
+  node dist/index.js <source-file>
+#+end_src
+
+Or if you have =ts-node= installed, you can simply do
+
+#+begin_src bash
+  npx ts-node index.ts
+#+end_src
+
+* Contributing
+
+Please raise bugs and feature requests in Github Issues Section.
+
+* LICENSE
+
+All files and folders are under [[https://choosealicense.com/licenses/mit/][MIT]].
