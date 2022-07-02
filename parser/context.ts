@@ -49,6 +49,9 @@ class Stack<T> {
     }
 }
 
+/**
+    * Stores all the variables and their value;
+    */
 class ExecutionContext {
 
     stack: Stack<Map<string, any>>;

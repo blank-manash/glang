@@ -3,18 +3,18 @@
 
 * Introduction
 
-The above project is a in-progress compiler for =glang=. It leverages a custom build lexer and parser implementing the TOP-DOWN Recursive Descent Algorithm for semantic checking.
+The above project is a complete interpreter for =glang=. It leverages a custom build lexer and parser implementing the TOP-DOWN Recursive Descent Algorithm for semantic checking.
 
 * Syntax
 
-=glang= borrows a lot of it's syntax from =javascript=, along with it's support for functional programming
+=glang= borrows a lot of it's syntax from =javascript=, along with it's support for functional programming. You might find some reference to python and haskell as well, but overall it's what you make it.
 
 An example code is provided below
 
 #+begin_src typescript
   let x = 51 + 21;
 
-  const add = func(a, b) {
+  let add = func(a, b) {
     a + b // Semi-colons are optional and '//' triggers a comment
   }
 
@@ -22,3 +22,46 @@ An example code is provided below
     return add(5,x); // Partial Application
   }
 #+end_src
+
+You can find more examples in the =examples/= directory.
+
+** Rules
+
+=glang= is an dynamically typed language. And supports flexible assignments like =javascript= or =python=. Except statements like =let= or =return=, everything is and expression, and everything can produce a value.
+
+This means that the above is completely valid (Implicit Returns).
+
+#+begin_src typescript
+  let fib = func(n) {
+      if (n == 0) {
+          0
+      } elif (n == 1) {
+          1
+      } else {
+          fib(n - 1) + fib(n - 2)
+      }
+  }
+#+end_src
+
+As you can see return statements are optional, supporting implicit returns.
+
+Like =javascript= and (not so) python, ';' are also optional.
+
+** Variable Scopes
+
+The variables in =glang= follow a blocked scope. As such,
+
+#+begin_src typescript
+  let z = 0;
+
+  let q = func() {
+      let o = 1;
+  }
+
+  puts(z) // Accesible
+  puts(o) // Unknown Identifier Error
+
+#+end_src
+
+* TODO Installation
+* TODO Usage
